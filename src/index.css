@@ -1,0 +1,40 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+ @import "tailwindcss";
+
+    body {
+    font-family: "Poppins", sans-serif;
+    }
+
+@theme {
+  --breakpoint-3xl: 1920px;
+
+  /* Primary colors */
+  --color-primary-900: oklch(0.20 0.03 250);
+  /* Dark navy */
+  --color-primary-800: oklch(0.27 0.03 250);
+  --color-primary-700: oklch(0.34 0.03 250);
+  --color-primary-600: oklch(0.41 0.03 250);
+  /* #1B3C53 */
+  --color-primary-500: oklch(0.48 0.03 250);
+  --color-primary-400: oklch(0.55 0.03 250);
+  /* #456882 */
+  --color-primary-300: oklch(0.65 0.02 250);
+  --color-primary-200: oklch(0.80 0.01 250);
+  --color-primary-100: oklch(0.93 0.005 250);
+
+  /* Secondary colors */
+  --color-secondary-600: oklch(0.75 0.05 70);
+  /* #D2C1B6 */
+  --color-secondary-300: oklch(0.85 0.03 70);
+  --color-secondary-100: oklch(0.98 0.01 70);
+  /* #F9F3EF */
+
+  /* Accent colors (derived from primary) */
+  --color-accent-500: oklch(0.55 0.08 250);
+  /* Slightly more saturated primary */
+
+  --ease-fluid: cubic-bezier(0.3, 0, 0, 1);
+  --ease-snappy: cubic-bezier(0.2, 0, 0, 1);
+}
+
+
