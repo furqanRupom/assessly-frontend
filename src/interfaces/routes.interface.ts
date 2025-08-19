@@ -3,7 +3,7 @@ import { type JSX, type ReactNode } from "react";
 
 
 export interface IRoutePath {
-    name: string;
+    name?: string;
     icon?:JSX.Element
     path?: string;
     element?: JSX.Element;

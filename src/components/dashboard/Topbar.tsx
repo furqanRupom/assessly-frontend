@@ -11,7 +11,7 @@ export const Topbar = ({ onMenuClick }: { onMenuClick: () => void }) => {
     const profileRef = useRef<HTMLDivElement>(null);
     const { data, isLoading } = useGetUserProfileQuery({});
     const dispatch = useDispatch()
-    const user = data.data
+    const user = data?.data
 
     // Close profile dropdown when clicking outside
     useEffect(() => {

@@ -17,6 +17,10 @@ import  DashboardLayout from "../layout/DashboardLayout";
 // // import Login from "../pages/Login";
 import {ProtectedRoute} from "../private/ProtectedRoute";
 import StudentHome from "../pages/dashboard/student/StudentHome";
+import { routesGenerator } from "../utils/routesGenerator";
+import { StudentSidebarPaths } from "./student.routes";
+import { AdminSidebarPaths } from "./admin.routes";
+import { SuperAdminSidebarPaths } from "./superAdmin.routes";
 // import ChangePassword from "../pages/ChangePassword";
 
 const router = createBrowserRouter([
@@ -33,16 +37,21 @@ const router = createBrowserRouter([
       }
     ],
   },
+  
   {
-    path: "/",
-    element:<DashboardLayout />,
-    children: [
-      {
-        path: "/student/dashboard",
-        element: <ProtectedRoute role="student"><StudentHome /></ProtectedRoute>,
-      }
-    ]
-
+    path: "/student",
+    element: <ProtectedRoute role="student"><DashboardLayout /></ProtectedRoute>,
+    children: routesGenerator(StudentSidebarPaths)
+  },
+  {
+    path: "/admin",
+    element: <ProtectedRoute role="admin"><DashboardLayout /></ProtectedRoute>,
+    children: routesGenerator(AdminSidebarPaths)
+  },
+  {
+    path: "/superAdmin",
+    element: <ProtectedRoute role="superAdmin"><DashboardLayout /></ProtectedRoute>,
+    children: routesGenerator(SuperAdminSidebarPaths)
   },
   // {
   //   path: "/admin",

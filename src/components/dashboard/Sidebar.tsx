@@ -14,10 +14,16 @@ import {
     PlusCircle
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
+import { sidebarGenerator, type INavItem } from "../../utils/sidebarGenerator";
+import { AdminSidebarPaths } from "../../routes/admin.routes";
+import type { IRoutePath } from "../../interfaces/routes.interface";
+import { useUser } from "../../hooks/useUser";
+import { StudentSidebarPaths } from "../../routes/student.routes";
 
 export default function Sidebar() {
     const [isOpen, setIsOpen] = useState(true);
     const location = useLocation();
+    const user = useUser()
 
     const navItems = [
         { to: "/", icon: <Home size={18} />, label: "Dashboard" },
@@ -32,6 +38,25 @@ export default function Sidebar() {
     const secondaryItems = [
         { to: "/settings", icon: <Settings size={18} />, label: "Settings" }
     ];
+    let sidebarItems:INavItem[] = []
+    switch (user?.role) {
+        case 'student':
+            sidebarItems = sidebarGenerator(StudentSidebarPaths, 'student')
+            break;
+        case 'supervisor':
+            sidebarItems = sidebarGenerator(AdminSidebarPaths, 'supervisor')
+            break;
+        case 'admin':
+            sidebarItems = sidebarGenerator(AdminSidebarPaths, 'admin')
+            break;
+        case 'superAdmin':
+            sidebarItems = sidebarGenerator(AdminSidebarPaths, 'superAdmin')
+            break;
+    
+        default:
+            sidebarItems = [];
+    }
+    
 
     return (
         <motion.aside
@@ -71,7 +96,7 @@ export default function Sidebar() {
                 )}
 
                 <ul className="space-y-1">
-                    {navItems.map((item) => (
+                    {sidebarItems.map((item) => (
                         <li key={item.to}>
                             <Link
                                 to={item.to}
