@@ -4,6 +4,7 @@ import { type JSX, type ReactNode } from "react";
 
 export interface IRoutePath {
     name: string;
+    icon?:JSX.Element
     path?: string;
     element?: JSX.Element;
     children?: IPathRoutes[];
