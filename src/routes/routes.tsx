@@ -34,11 +34,11 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: "/dashboard",
+    path: "/",
     element:<DashboardLayout />,
     children: [
       {
-        path: "/dashboard/student",
+        path: "/student/dashboard",
         element: <ProtectedRoute role="student"><StudentHome /></ProtectedRoute>,
       }
     ]

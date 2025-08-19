@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
+import { useUser } from '../hooks/useUser';
 
 const Navbar = () => {
     const [scrolled, setScrolled] = useState(false);
@@ -21,6 +22,7 @@ const Navbar = () => {
         { name: 'About', path: '/about' },
         { name: 'Assessments', path: '/assessments' },
     ];
+    const user = useUser()
 
     return (
         <header className={`fixed w-full z-50 transition-all duration-300 ${scrolled ? 'bg-white shadow-sm' : 'bg-white/90 backdrop-blur-sm'}`}>
@@ -52,17 +54,28 @@ const Navbar = () => {
                         ))}
                     </nav>
 
-                    {/* CTA Button */}
-                    <div className="hidden md:block">
-                        <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                            <Link
-                                to="/register"
-                                className="px-6 py-2.5 rounded-lg bg-primary-600 text-white font-medium hover:bg-primary-700 transition-colors shadow-md"
-                            >
-                                Get Started
-                            </Link>
-                        </motion.div>
-                    </div>
+                  {
+                        user ? (<div  className="hidden md:block">
+                            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                                <Link
+                                    to={`/${user?.role}/dashboard`}
+                                    className="px-6 py-2.5 rounded-lg bg-primary-600 text-white font-medium hover:bg-primary-700 transition-colors shadow-md"
+                                >
+                                    On board
+                                </Link>
+                            </motion.div>
+                        </div>) : (<div className="hidden md:block">
+                            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                                <Link
+                                    to="/register"
+                                    className="px-6 py-2.5 rounded-lg bg-primary-600 text-white font-medium hover:bg-primary-700 transition-colors shadow-md"
+                                >
+                                    Get Started
+                                </Link>
+                            </motion.div>
+                        </div>)
+                          
+                  }
 
                     {/* Mobile Menu Button */}
                     <motion.button

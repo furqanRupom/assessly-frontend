@@ -33,7 +33,7 @@ const customBaseQueryWithRefreshToken = async (
 
 
             const res = await fetch(
-                "http://localhost:3000/api/v1/auth/refresh",
+                "http://localhost:3000/api/v1/auth/refresh-token",
                 {
                     method: "POST",
                     credentials: "include",
@@ -64,7 +64,7 @@ const customBaseQueryWithRefreshToken = async (
 
 export const baseApi = createApi({
     reducerPath: "baseApi",
-    baseQuery: customBaseQueryWithRefreshToken,
+    baseQuery: baseQuery,
     tagTypes: ['semester', 'course', 'offeredCourse'],
     endpoints: () => ({}),
 });

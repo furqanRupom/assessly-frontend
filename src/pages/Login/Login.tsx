@@ -7,7 +7,7 @@ import ASInput from '../../components/form/ASInput';
 import { useDispatch } from 'react-redux';
 import {toast} from 'sonner'
 import { useLoginMutation } from '../../redux/features/auth/authApi';
-import { verifyToken } from '../../utils/verifyToken';
+import { verifyToken, type DecodedToken } from '../../utils/verifyToken';
 import { setUser, type IUser } from '../../redux/features/auth/authSlice';
 import type { FieldValues } from 'react-hook-form';
 
@@ -19,14 +19,13 @@ const Login =  () => {
         const loadingToast = toast.loading('Logging in...');
         try {
             const res = await login(data).unwrap();
-            const user = verifyToken(res?.data?.accessToken) as IUser
-            console.log('Login response:', res);
+            const user = verifyToken(res?.data?.accessToken) as DecodedToken
             dispatch(setUser({user:user,token:res?.data?.accessToken}));
             toast.success(res.message,{
                 id: loadingToast,
                 duration:2000
             })
-            navigate('/dashboard');
+            navigate(`/${user.role}/dashboard`);
             
         } catch (error: any) {
             if (error.data?.message?.includes('OTP')) {
