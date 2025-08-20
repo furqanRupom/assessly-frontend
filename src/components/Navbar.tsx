@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 import { useUser } from '../hooks/useUser';
+import PrimaryButton from './button/PrimaryButton';
 
 const Navbar = () => {
     const [scrolled, setScrolled] = useState(false);
@@ -56,14 +57,7 @@ const Navbar = () => {
 
                   {
                         user ? (<div  className="hidden md:block">
-                            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                                <Link
-                                    to={`/${user?.role}/dashboard`}
-                                    className="px-6 py-2.5 rounded-lg bg-primary-600 text-white font-medium hover:bg-primary-700 transition-colors shadow-md"
-                                >
-                                    On board
-                                </Link>
-                            </motion.div>
+                            <PrimaryButton link={`/${user.role}/dashboard`}>Onboard</PrimaryButton>
                         </div>) : (<div className="hidden md:block">
                             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                                 <Link

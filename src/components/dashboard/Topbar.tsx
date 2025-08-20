@@ -1,4 +1,5 @@
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Search, Bell, HelpCircle, Menu, LogOut, User, Settings, ChevronDown } from "lucide-react";
 import { useGetUserProfileQuery } from "../../redux/features/user/userApi";
 import { Navigate } from "react-router-dom";
@@ -8,22 +9,9 @@ import { logout } from "../../redux/features/auth/authSlice";
 export const Topbar = ({ onMenuClick }: { onMenuClick: () => void }) => {
     const [isProfileOpen, setIsProfileOpen] = useState(false);
     const [isSearchFocused, setIsSearchFocused] = useState(false);
-    const profileRef = useRef<HTMLDivElement>(null);
     const { data, isLoading } = useGetUserProfileQuery({});
     const dispatch = useDispatch()
     const user = data?.data
-
-    // Close profile dropdown when clicking outside
-    useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
-            if (profileRef.current && !profileRef.current.contains(event.target as Node)) {
-                setIsProfileOpen(false);
-            }
-        };
-
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => document.removeEventListener("mousedown", handleClickOutside);
-    }, []);
 
     if (isLoading) {
         return (
@@ -102,10 +90,11 @@ export const Topbar = ({ onMenuClick }: { onMenuClick: () => void }) => {
                     </button>
 
                     {/* User Profile */}
-                    <div className="relative" ref={profileRef}>
-                        <button
+                    <motion.div className="relative" whileTap={{ scale: 0.98 }}>
+                        <motion.button
                             className="flex items-center space-x-2 p-1 rounded-lg hover:bg-primary-50 transition-colors"
                             onClick={() => setIsProfileOpen(!isProfileOpen)}
+                            whileHover={{ backgroundColor: "rgba(243, 244, 246, 0.5)" }}
                         >
                             <div className="relative">
                                 <div className="w-10 h-10 rounded-full cursor-pointer bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center text-white font-medium text-sm">
@@ -123,44 +112,65 @@ export const Topbar = ({ onMenuClick }: { onMenuClick: () => void }) => {
                                 </p>
                             </div>
 
-                            <ChevronDown
-                                size={16}
-                                className={`text-primary-500 transition-transform ${isProfileOpen ? "rotate-180" : ""
-                                    }`}
-                            />
-                        </button>
+                            <motion.div
+                                animate={{ rotate: isProfileOpen ? 180 : 0 }}
+                                transition={{ duration: 0.2 }}
+                            >
+                                <ChevronDown
+                                    size={16}
+                                    className="text-primary-500"
+                                />
+                            </motion.div>
+                        </motion.button>
 
                         {/* Profile Dropdown */}
-                        {isProfileOpen && (
-                            <div className="absolute right-0 top-full mt-2 bg-white rounded-lg shadow-lg border border-primary-100 py-1 z-40">
-                                <div className="px-4 py-2 border-b border-primary-100">
-                                    <p className="text-sm font-medium text-primary-800 truncate">
-                                        {user.name}
-                                    </p>
-                                    <p className="text-xs text-primary-500">
-                                        {user.email}
-                                    </p>
-                                </div>
+                        <AnimatePresence>
+                            {isProfileOpen && (
+                                <motion.div
+                                    className="absolute right-0 top-full mt-2 bg-white rounded-lg shadow-lg border border-primary-100 py-1 z-40"
+                                    initial={{ opacity: 0, y: -10, scale: 0.5 }}
+                                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                                    exit={{ opacity: 0, y: -10, scale: 0.5 }}
+                                    transition={{ duration: 0.15 }}
+                                    onClick={(e) => e.stopPropagation()}
+                                >
+                                    <div className="px-4 py-2 border-b border-primary-100">
+                                        <p className="text-sm font-medium text-primary-800 truncate">
+                                            {user.name}
+                                        </p>
+                                        <p className="text-xs text-primary-500">
+                                            {user.email}
+                                        </p>
+                                    </div>
 
-                                <button className="w-full cursor-pointer flex items-center px-4 py-2 text-sm text-primary-700 hover:bg-primary-50 transition-colors">
-                                    <User size={16} className="mr-3" />
-                                    Profile
-                                </button>
+                                    <motion.button
+                                        className="w-full cursor-pointer flex items-center px-4 py-2 text-sm text-primary-700 hover:bg-primary-50 hover:bg-primary-100"
+                                    >
+                                        <User size={16} className="mr-3" />
+                                        Profile
+                                    </motion.button>
 
-                                <button className="w-full flex cursor-pointer items-center px-4 py-2 text-sm text-primary-700 hover:bg-primary-50 transition-colors">
-                                    <Settings size={16} className="mr-3" />
-                                    Settings
-                                </button>
+                                    <motion.button
+                                        className="w-full flex cursor-pointer items-center px-4 py-2 text-sm text-primary-700 hover:bg-primary-100"
+                                    >
+                                        <Settings size={16} className="mr-3" />
+                                        Settings
+                                    </motion.button>
 
-                                <div className="border-t border-primary-100 my-1"></div>
+                                    <div className="border-t border-primary-100 my-1"></div>
 
-                                <button onClick={()=> dispatch(logout())} className="w-full flex cursor-pointer items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors">
-                                    <LogOut size={16} className="mr-3" />
-                                    Sign Out
-                                </button>
-                            </div>
-                        )}
-                    </div>
+                                    <motion.button
+                                        onClick={() => dispatch(logout())}
+                                        className="w-full flex cursor-pointer items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50 "
+                                        whileHover={{ backgroundColor: "#fef2f2" }}
+                                    >
+                                        <LogOut size={16} className="mr-3" />
+                                        Sign Out
+                                    </motion.button>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+                    </motion.div>
                 </div>
             </div>
         </header>

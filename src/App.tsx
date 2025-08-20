@@ -2,6 +2,7 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { BookOpen, BarChart2, Award, CheckCircle } from 'lucide-react';
+import PrimaryButton from './components/button/PrimaryButton';
 
 // Animation variants
 const container = {
@@ -70,12 +71,7 @@ const Home = () => {
             </motion.p>
 
             <motion.div variants={item} className="flex flex-col sm:flex-row justify-center gap-4">
-              <Link
-                to="/register"
-                className="px-8 py-4 bg-primary-600 text-white font-medium rounded-lg hover:bg-primary-700 transition-colors shadow-lg shadow-primary-200/50"
-              >
-                Start Assessment
-              </Link>
+             <PrimaryButton link='/register'>Start Assessment</PrimaryButton>
               <Link
                 to="/how-it-works"
                 className="px-8 py-4 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors"

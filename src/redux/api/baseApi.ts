@@ -65,6 +65,6 @@ const customBaseQueryWithRefreshToken = async (
 export const baseApi = createApi({
     reducerPath: "baseApi",
     baseQuery: baseQuery,
-    tagTypes: ['semester', 'course', 'offeredCourse'],
+    tagTypes: ['user', 'auth', 'supervisor'],
     endpoints: () => ({}),
 });
