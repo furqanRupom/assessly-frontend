@@ -19,6 +19,7 @@ import { AdminSidebarPaths } from "../../routes/admin.routes";
 import type { IRoutePath } from "../../interfaces/routes.interface";
 import { useUser } from "../../hooks/useUser";
 import { StudentSidebarPaths } from "../../routes/student.routes";
+import { SuperAdminSidebarPaths } from "../../routes/superAdmin.routes";
 
 export default function Sidebar() {
     const [isOpen, setIsOpen] = useState(true);
@@ -50,7 +51,7 @@ export default function Sidebar() {
             sidebarItems = sidebarGenerator(AdminSidebarPaths, 'admin')
             break;
         case 'superAdmin':
-            sidebarItems = sidebarGenerator(AdminSidebarPaths, 'superAdmin')
+            sidebarItems = sidebarGenerator(SuperAdminSidebarPaths, 'superAdmin')
             break;
     
         default:
