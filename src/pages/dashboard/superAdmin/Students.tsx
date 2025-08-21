@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useGetAllAdminsQuery, useGetAllStudentsQuery } from "../../../redux/features/admin/adminApi";
 import type { IQueryParams } from "../../../interfaces/admin.interface";
 import type { IUser } from "../../../interfaces/user.interface";
 import Breadcrumbs from "../../../components/ui/Breadcrumbs";
@@ -7,11 +6,12 @@ import DeleteModal from "../../../components/ui/DeleteModal";
 import type { IColumn } from "../../../components/table/Table";
 import { Button } from "@radix-ui/themes";
 import CustomTable from "../../../components/table/Table";
+import { useGetAllStudentsQuery } from "../../../redux/features/admin/adminApi";
 
 
-const AdminManagement = () => {
+const StudentManagement = () => {
   const [queryParams, setQueryParams] = useState<IQueryParams[]>([]);
-  const { data, isLoading, refetch } = useGetAllAdminsQuery(queryParams);
+  const { data, isLoading, refetch } = useGetAllStudentsQuery(queryParams);
   console.log(data)
 
   const students = (data?.data as unknown as IUser[]) || [];
@@ -103,13 +103,10 @@ const AdminManagement = () => {
 
   return (
     <section className="p-6">
-      <Breadcrumbs breadcrumbs={["dashboard", "admins"]} />
+      <Breadcrumbs breadcrumbs={["dashboard", "students"]} />
 
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold text-primary-800">Admin Management</h2>
-        <Button asChild>
-          <a href="/dashboard/new-student">New Admin</a>
-        </Button>
+        <h2 className="text-xl font-semibold text-primary-800">Student Management</h2>
       </div>
 
       <CustomTable
@@ -147,4 +144,4 @@ const AdminManagement = () => {
   );
 };
 
-export default AdminManagement;
+export default StudentManagement;
