@@ -1,6 +1,17 @@
 import * as React from "react";
-import { Button, Table, TextField, Select, Flex, Text } from "@radix-ui/themes";
-import { MagnifyingGlassIcon, ChevronLeftIcon, ChevronRightIcon, DoubleArrowLeftIcon, DoubleArrowRightIcon } from "@radix-ui/react-icons";
+import {
+    ChevronLeftIcon,
+    ChevronRightIcon,
+    DoubleArrowLeftIcon,
+    DoubleArrowRightIcon,
+    MagnifyingGlassIcon,
+} from "@radix-ui/react-icons";
+import { Input } from "../ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../ui/table";
+import { Skeleton } from "../ui/skeleton";
+import { Badge } from "../ui/badge";
+import { Button } from "../ui/button";
 
 export interface IColumn {
     title: string;
@@ -23,6 +34,7 @@ interface ICustomTableProps<T> {
     onFilter?: (filters: Record<string, string>) => void;
     onPageChange?: (page: number) => void;
     onLimitChange?: (limit: number) => void;
+    onSort?: (sortOrder: "asc" | "desc") => void;
     isLoading?: boolean;
 }
 
@@ -35,11 +47,12 @@ const CustomTable = <T extends Record<string, any>>({
     onFilter,
     onPageChange,
     onLimitChange,
+    onSort,
     isLoading = false,
 }: ICustomTableProps<T>) => {
     const [searchTerm, setSearchTerm] = React.useState("");
     const [filters, setFilters] = React.useState<Record<string, string>>({});
-    const [localPage, setLocalPage] = React.useState(1);
+    const [sortDirection, setSortDirection] = React.useState<"asc" | "desc">("desc");
 
     // Handle search with debounce
     React.useEffect(() => {
@@ -52,7 +65,6 @@ const CustomTable = <T extends Record<string, any>>({
         return () => clearTimeout(timeoutId);
     }, [searchTerm, onSearch]);
 
-    // Handle filter changes
     const handleFilterChange = (key: string, value: string) => {
         const newFilters = { ...filters, [key]: value };
         setFilters(newFilters);
@@ -61,194 +73,286 @@ const CustomTable = <T extends Record<string, any>>({
         }
     };
 
-    // Handle page changes
-    const handlePageChange = (page: number) => {
-        setLocalPage(page);
-        if (onPageChange) {
-            onPageChange(page);
+    const handleSort = () => {
+        const newDirection = sortDirection === "asc" ? "desc" : "asc";
+        setSortDirection(newDirection);
+        if (onSort) {
+            onSort(newDirection);
         }
     };
 
-    // Handle limit changes
-    const handleLimitChange = (value: string) => {
-        const limit = Number(value);
-        if (onLimitChange) {
-            onLimitChange(limit);
-        }
-    };
-
-    const currentPage = meta?.page || localPage;
+    const currentPage = meta?.page || 1;
 
     return (
-        <div className="space-y-4">
+        <div className="space-y-6 p-4  rounded-lg ">
             {/* Search and Filters */}
-            <Flex gap="3" direction="column">
-                {/* Search Input */}
-                <TextField.Root
-                    placeholder="Search users..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    size="2"
-                >
-                    <TextField.Slot>
-                        <MagnifyingGlassIcon height="16" width="16" />
-                    </TextField.Slot>
-                </TextField.Root>
+            <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+                <div className="flex flex-col gap-4">
+                    {/* Search Input */}
+                    <div className="relative">
+                        <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                        <Input
+                            placeholder="Search users..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            className="pl-10 bg-gray-50 border-primary-200 focus:border-primary-400"
+                        />
+                    </div>
 
-                {/* Filters */}
-                <Flex gap="2" wrap="wrap">
-                    {columns
-                        .filter((col) => col.filterable && col.filterOptions)
-                        .map((col) => (
-                            <Select.Root
-                                key={col.key}
-                                value={filters[col.key] || "all"}
-                                onValueChange={(value) => handleFilterChange(col.key, value === "all" ? "" : value)}
-                                size="1"
-                            >
-                                <Select.Trigger placeholder={`Filter by ${col.title}`} />
-                                <Select.Content>
-                                    <Select.Item value="all">All {col.title}</Select.Item>
-                                    {col.filterOptions?.map((option) => (
-                                        <Select.Item key={option.value} value={option.value}>
-                                            {option.label}
-                                        </Select.Item>
-                                    ))}
-                                </Select.Content>
-                            </Select.Root>
-                        ))}
-                </Flex>
-            </Flex>
+                    {/* Filters and Sort */}
+                    <div className="flex gap-3 flex-wrap items-center">
+                        {/* Filters */}
+                        {columns
+                            .filter((col) => col.filterable && col.filterOptions)
+                            .map((col) => (
+                                <Select
+                                    key={col.key}
+                                    value={filters[col.key] || "all"}
+                                    onValueChange={(value) =>
+                                        handleFilterChange(col.key, value === "all" ? "" : value)
+                                    }
+                                >
+                                    <SelectTrigger className="w-[180px] bg-white border-gray-300 text-gray-700 hover:bg-gray-50">
+                                        <SelectValue placeholder={`Filter by ${col.title}`} />
+                                    </SelectTrigger>
+                                    <SelectContent className="bg-white border border-gray-200 shadow-lg rounded-md">
+                                        <SelectItem value="all">All {col.title}</SelectItem>
+                                        {col.filterOptions?.map((option) => (
+                                            <SelectItem key={option.value} value={option.value}>
+                                                {option.label}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                            ))}
+
+                        {/* Sort Button */}
+                        <Button
+                            variant="outline"
+                            onClick={handleSort}
+                            className="ml-auto flex items-center gap-2 cursor-pointer"
+                        >
+                            <span>Sort: {sortDirection === "asc" ? "Oldest First" : "Newest First"}</span>
+                            {sortDirection === "asc" ? "↑" : "↓"}
+                        </Button>
+                        
+                    </div>
+                </div>
+            </div>
 
             {/* Table */}
-            <Table.Root>
-                <Table.Header>
-                    <Table.Row>
-                        {columns.map((col) => (
-                            <Table.ColumnHeaderCell key={col.key}>
-                                {col.title}
-                            </Table.ColumnHeaderCell>
-                        ))}
-                        {actions && <Table.ColumnHeaderCell>Actions</Table.ColumnHeaderCell>}
-                    </Table.Row>
-                </Table.Header>
-
-                <Table.Body>
-                    {isLoading ? (
-                        // Loading state
-                        <Table.Row>
-                            <Table.Cell colSpan={columns.length + (actions ? 1 : 0)}>
-                                <Flex align="center" justify="center" py="4">
-                                    <Text>Loading...</Text>
-                                </Flex>
-                            </Table.Cell>
-                        </Table.Row>
-                    ) : data.length === 0 ? (
-                        // Empty state
-                        <Table.Row>
-                            <Table.Cell colSpan={columns.length + (actions ? 1 : 0)}>
-                                <Flex align="center" justify="center" py="4">
-                                    <Text color="gray">No data found</Text>
-                                </Flex>
-                            </Table.Cell>
-                        </Table.Row>
-                    ) : (
-                        // Data rows
-                        data.map((row, idx) => (
-                            <Table.Row key={idx}>
-                                {columns.map((col) => (
-                                    <Table.Cell key={col.key}>
-                                        {typeof row[col.key] === "boolean"
-                                            ? row[col.key] ? "Yes" : "No"
-                                            : row[col.key]}
-                                    </Table.Cell>
-                                ))}
-                                {actions && <Table.Cell>{actions(row)}</Table.Cell>}
-                            </Table.Row>
-                        ))
-                    )}
-                </Table.Body>
-            </Table.Root>
+            <div className="bg-white rounded-lg shadow-sm overflow-hidden border border-gray-200">
+                <Table>
+                    <TableHeader>
+                        <TableRow className="bg-gradient-to-r from-primary-600 to-primary-700 hover:bg-primary-700">
+                            {columns.map((col) => (
+                                <TableHead
+                                    key={col.key}
+                                    className="text-white font-semibold py-4 text-sm uppercase h-12"
+                                >
+                                    {col.title}
+                                </TableHead>
+                            ))}
+                            {actions && (
+                                <TableHead className="text-white font-semibold py-4 text-sm uppercase h-12">
+                                    Actions
+                                </TableHead>
+                            )}
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        {isLoading ? (
+                            // Loading state
+                            <TableRow>
+                                <TableCell
+                                    colSpan={columns.length + (actions ? 1 : 0)}
+                                    className="h-24 text-center"
+                                >
+                                    <div className="flex items-center justify-center space-x-4">
+                                        <Skeleton className="h-12 w-12 rounded-full" />
+                                        <div className="space-y-2">
+                                            <Skeleton className="h-4 w-[250px]" />
+                                            <Skeleton className="h-4 w-[200px]" />
+                                        </div>
+                                    </div>
+                                </TableCell>
+                            </TableRow>
+                        ) : data.length === 0 ? (
+                            // Empty state
+                            <TableRow>
+                                <TableCell
+                                    colSpan={columns.length + (actions ? 1 : 0)}
+                                    className="h-24 text-center"
+                                >
+                                    <div className="flex flex-col items-center justify-center gap-3 py-8">
+                                        <div className="text-primary-400">
+                                            <svg
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                className="h-16 w-16"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                                stroke="currentColor"
+                                            >
+                                                <path
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth={2}
+                                                    d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                                                />
+                                            </svg>
+                                        </div>
+                                        <p className="text-lg font-medium text-gray-500">
+                                            No data found
+                                        </p>
+                                        <p className="text-sm text-gray-400">
+                                            Try adjusting your search or filter to find what you're
+                                            looking for.
+                                        </p>
+                                    </div>
+                                </TableCell>
+                            </TableRow>
+                        ) : (
+                            // Data rows
+                            data.map((row, idx) => (
+                                <TableRow
+                                    key={idx}
+                                    className={`transition-colors ${idx % 2 === 0 ? "bg-gray-50" : "bg-white"
+                                        } hover:bg-primary-50`}
+                                >
+                                    {columns.map((col) => (
+                                        <TableCell key={col.key} className="py-3 text-gray-700">
+                                            {typeof row[col.key] === "boolean" ? (
+                                                row[col.key] ? (
+                                                    <Badge variant="secondary">Yes</Badge>
+                                                ) : (
+                                                    <Badge variant="destructive">No</Badge>
+                                                )
+                                            ) : (
+                                                row[col.key]
+                                            )}
+                                        </TableCell>
+                                    ))}
+                                    {actions && (
+                                        <TableCell className="py-3">
+                                            <div className="flex gap-2">{actions(row)}</div>
+                                        </TableCell>
+                                    )}
+                                </TableRow>
+                            ))
+                        )}
+                    </TableBody>
+                </Table>
+            </div>
 
             {/* Pagination */}
             {meta && meta.totalPage > 1 && (
-                <Flex align="center" justify="between" gap="3">
-                    <Flex align="center" gap="2">
-                        <Text size="1" color="gray">
-                            Showing {((currentPage - 1) * meta.limit) + 1} to{" "}
-                            {Math.min(currentPage * meta.limit, meta.total)} of {meta.total} results
-                        </Text>
+                <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+                    <div className="flex items-center justify-between gap-3">
+                        <div className="flex items-center gap-3">
+                            <p className="text-sm text-gray-600">
+                                Showing{" "}
+                                <span className="font-semibold text-primary-600">
+                                    {((currentPage - 1) * meta.limit) + 1}
+                                </span>{" "}
+                                to{" "}
+                                <span className="font-semibold text-primary-600">
+                                    {Math.min(currentPage * meta.limit, meta.total)}
+                                </span>{" "}
+                                of{" "}
+                                <span className="font-semibold text-primary-600">
+                                    {meta.total}
+                                </span>{" "}
+                                results
+                            </p>
 
-                        <Select.Root
-                            value={meta.limit.toString()}
-                            onValueChange={handleLimitChange}
-                            size="1"
-                        >
-                            <Select.Trigger />
-                            <Select.Content>
-                                <Select.Item value="10">10 per page</Select.Item>
-                                <Select.Item value="25">25 per page</Select.Item>
-                                <Select.Item value="50">50 per page</Select.Item>
-                                <Select.Item value="100">100 per page</Select.Item>
-                            </Select.Content>
-                        </Select.Root>
-                    </Flex>
+                            <Select
+                                value={meta.limit.toString()}
+                                onValueChange={(value) =>
+                                    onLimitChange && onLimitChange(Number(value))
+                                }
+                            >
+                                <SelectTrigger className="w-[120px] bg-white border-gray-300">
+                                    <SelectValue placeholder="Per page" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="10">10 per page</SelectItem>
+                                    <SelectItem value="25">25 per page</SelectItem>
+                                    <SelectItem value="50">50 per page</SelectItem>
+                                    <SelectItem value="100">100 per page</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
 
-                    <Flex gap="1">
-                        <Button
-                            variant="soft"
-                            size="1"
-                            onClick={() => handlePageChange(1)}
-                            disabled={currentPage === 1}
-                        >
-                            <DoubleArrowLeftIcon />
-                        </Button>
+                        <div className="flex gap-1 items-center">
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => onPageChange && onPageChange(1)}
+                                disabled={currentPage === 1}
+                            >
+                                <DoubleArrowLeftIcon />
+                            </Button>
 
-                        <Button
-                            variant="soft"
-                            size="1"
-                            onClick={() => handlePageChange(currentPage - 1)}
-                            disabled={currentPage === 1}
-                        >
-                            <ChevronLeftIcon />
-                        </Button>
-                        
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() =>
+                                    onPageChange && onPageChange(currentPage - 1)
+                                }
+                                disabled={currentPage === 1}
+                            >
+                                <ChevronLeftIcon />
+                            </Button>
 
-                        <Flex gap="1" align="center">
-                            {Array.from({ length: Math.min(5, meta.totalPage) }, (_, i) => {
-                                const pageNum = Math.max(1, Math.min(currentPage - 2, meta.totalPage - 4)) + i;
-                                return (
-                                    <Button
-                                        key={pageNum}
-                                        variant={currentPage === pageNum ? "solid" : "soft"}
-                                        size="1"
-                                        onClick={() => handlePageChange(pageNum)}
-                                    >
-                                        {pageNum}
-                                    </Button>
-                                );
-                            })}
-                        </Flex>
+                            <div className="flex gap-1 items-center">
+                                {Array.from(
+                                    { length: Math.min(5, meta.totalPage) },
+                                    (_, i) => {
+                                        const pageNum =
+                                            Math.max(
+                                                1,
+                                                Math.min(currentPage - 2, meta.totalPage - 4)
+                                            ) + i;
+                                        return (
+                                            <Button
+                                                key={pageNum}
+                                                variant={currentPage === pageNum ? "default" : "outline"}
+                                                size="sm"
+                                                onClick={() =>
+                                                    onPageChange && onPageChange(pageNum)
+                                                }
+                                            >
+                                                {pageNum}
+                                            </Button>
+                                        );
+                                    }
+                                )}
+                            </div>
 
-                        <Button
-                            variant="soft"
-                            size="1"
-                            onClick={() => handlePageChange(currentPage + 1)}
-                            disabled={currentPage === meta.totalPage}
-                        >
-                            <ChevronRightIcon />
-                        </Button>
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() =>
+                                    onPageChange && onPageChange(currentPage + 1)
+                                }
+                                disabled={currentPage === meta.totalPage}
+                            >
+                                <ChevronRightIcon />
+                            </Button>
 
-                        <Button
-                            variant="soft"
-                            size="1"
-                            onClick={() => handlePageChange(meta.totalPage)}
-                            disabled={currentPage === meta.totalPage}
-                        >
-                            <DoubleArrowRightIcon />
-                        </Button>
-                    </Flex>
-                </Flex>
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() =>
+                                    onPageChange && onPageChange(meta.totalPage)
+                                }
+                                disabled={currentPage === meta.totalPage}
+                            >
+                                <DoubleArrowRightIcon />
+                            </Button>
+                        </div>
+                    </div>
+                </div>
             )}
         </div>
     );
