@@ -6,7 +6,7 @@ import {
     DialogTitle,
 } from "../ui/dialog";
 import { Button } from "../ui/button";
-import { AlertCircle, Trash2, X } from "lucide-react";
+import { AlertCircle, Trash2 } from "lucide-react";
 
 interface DeleteModalProps {
     isOpen: boolean;
@@ -15,6 +15,7 @@ interface DeleteModalProps {
     itemName?: string;
     title?: string;
     description?: string;
+    loading?:boolean
 }
 
 const DeleteModal: React.FC<DeleteModalProps> = ({
@@ -26,7 +27,7 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
     description = "Are you sure you want to delete this item? This action cannot be undone.",
 }) => {
     return (
-        <Dialog open={isOpen} onOpenChange={onClose}>
+        <Dialog open={isOpen}>
             <DialogContent className="sm:max-w-md">
                 <DialogHeader>
                     <DialogTitle className="flex items-center gap-2">
@@ -47,7 +48,11 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
                     <Button variant="outline" onClick={onClose}>
                         Cancel
                     </Button>
-                    <Button variant="destructive" onClick={onConfirm} className="gap-2">
+                    <Button
+                        variant="destructive"
+                        onClick={onConfirm} // <-- will call delete handler from parent
+                        className="gap-2"
+                    >
                         <Trash2 className="w-4 h-4" />
                         Delete
                     </Button>

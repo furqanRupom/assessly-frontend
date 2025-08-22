@@ -3,6 +3,7 @@ import AdminDashboard from "../pages/dashboard/admin/AdminDashboard";
 import Admins from "../pages/dashboard/superAdmin/Admins";
 import StudentManagement from "../pages/dashboard/superAdmin/Students";
 import SupervisorManagement from "../pages/dashboard/superAdmin/Supervisors";
+import SuperAdminDashboard from "../pages/dashboard/superAdmin/SuperAdminDashboard";
 /*
 /admin-home
 /add-supervisor
@@ -18,7 +19,7 @@ export const SuperAdminSidebarPaths = [
         name: "dashboard",
         path: "dashboard",
         icon: <Home size={18} />,
-        element: <AdminDashboard />
+        element: <SuperAdminDashboard />
     },
     {
         name: "All admins",

@@ -6,7 +6,7 @@ import {
     DialogTitle,
 } from "../ui/dialog";
 import { Button } from "../ui/button";
-import { AlertCircle, Trash2, X } from "lucide-react";
+import { AlertCircle, Loader2, Trash2, X } from "lucide-react";
 
 interface DeleteModalProps {
     isOpen: boolean;
@@ -15,6 +15,7 @@ interface DeleteModalProps {
     itemName?: string;
     title?: string;
     description?: string;
+    loading?:boolean
 }
 
 const DeleteModal: React.FC<DeleteModalProps> = ({
@@ -24,6 +25,7 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
     itemName,
     title = "Confirm Delete",
     description = "Are you sure you want to delete this item? This action cannot be undone.",
+    loading
 }) => {
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
@@ -47,9 +49,23 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
                     <Button variant="outline" onClick={onClose}>
                         Cancel
                     </Button>
-                    <Button variant="destructive" onClick={onConfirm} className="gap-2">
-                        <Trash2 className="w-4 h-4" />
-                        Delete
+                    <Button
+                        variant="destructive"
+                        onClick={onConfirm}
+                        disabled={loading}
+                        className="gap-2 cursor-pointer"
+                    >
+                        {loading ? (
+                            <>
+                                <Loader2 className="w-4 h-4 animate-spin cursor-not-allowed" />
+                                Deleting...
+                            </>
+                        ) : (
+                            <>
+                                <Trash2 className="w-4 h-4" />
+                                Delete
+                            </>
+                        )}
                     </Button>
                 </div>
             </DialogContent>

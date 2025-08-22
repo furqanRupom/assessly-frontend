@@ -68,7 +68,59 @@ const adminApi = baseApi.injectEndpoints({
                     data: response.data
                 }
             }
+        }),
+        getDailyUserRegistrations: builder.query({
+            query: (days = 30) => {
+                const params = new URLSearchParams();
+                if (days) {
+                    params.append('days', days.toString());
+                }
+                return {
+                    url: "/admin/user-registrations/daily",
+                    method: "GET",
+                    params
+                }
+            },
+            transformResponse: (response: IResponse<any>) => {
+                return response.data;
+            }
+        }),
+
+        getUserRegistrationStats: builder.query({
+            query: () => {
+                return {
+                    url: "/admin/user-registrations/stats",
+                    method: "GET"
+                }
+            },
+            transformResponse: (response: IResponse<any>) => {
+                return response.data;
+            }
+        }),
+        getUsersCount: builder.query({
+            query: () => {
+                return {
+                    url: "/admin/users-count", 
+                    method: "GET"
+                }
+            },
+            transformResponse: (response: IResponse<any>) => {
+                return response.data;
+            }
+        }),
+        deleteUser:builder.mutation({
+          query:(id:string)=> ({
+            url:`/admin/delete-user/${id}`,
+            method:"DELETE"
+          })
+        }),
+        updateUser:builder.mutation({
+            query:({data,id}) => ({
+                url:`/admin/update-user/${id}`,
+                method:"PUT",
+                body:data
+            })
         })
     })
 })
-export const { useGetAllAdminsQuery, useGetAllStudentsQuery, useGetAllSupervisorsQuery } = adminApi
+export const { useGetAllAdminsQuery, useGetAllStudentsQuery, useGetAllSupervisorsQuery, useGetDailyUserRegistrationsQuery, useGetUserRegistrationStatsQuery,useGetUsersCountQuery,useDeleteUserMutation,useUpdateUserMutation } = adminApi

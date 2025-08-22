@@ -4,9 +4,10 @@ import type { IUser } from "../../../interfaces/user.interface";
 import DeleteModal from "../../../components/form/DeleteModal";
 import type { IColumn } from "../../../components/table/Table";
 import CustomTable from "../../../components/table/Table";
-import { useGetAllStudentsQuery } from "../../../redux/features/admin/adminApi";
+import { useDeleteUserMutation, useGetAllStudentsQuery } from "../../../redux/features/admin/adminApi";
 import { Pencil1Icon, TrashIcon } from "@radix-ui/react-icons";
 import { Button } from "../../../components/ui/button";
+import { toast } from "sonner";
 
 const StudentManagement = () => {
   const [queryParams, setQueryParams] = useState<IQueryParams[]>([]);
@@ -19,6 +20,7 @@ const StudentManagement = () => {
 
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState<IUser | null>(null);
+  const [deleteUser,{isLoading:isDeleteLoading}] = useDeleteUserMutation() // we have to put id here
 
   const columns: IColumn[] = [
     {
@@ -132,17 +134,25 @@ const StudentManagement = () => {
     setDeleteModalOpen(true);
   };
 
-  const handleConfirmDelete = () => {
-    console.log("Deleted student:", selectedStudent);
-    setDeleteModalOpen(false);
-    refetch();
+  const handleConfirmDelete = async () => {
+    if (!selectedStudent?._id) return;
+
+    try {
+      await deleteUser(selectedStudent._id).unwrap();
+      toast.success('Student successfully deleted.')
+      setDeleteModalOpen(false);
+      setSelectedStudent(null);
+      refetch(); 
+    } catch (error) {
+      console.error("Failed to delete student:", error);
+    }
   };
 
   return (
-    <section className="p-6">
+    <section className="p-3">
       {/* <Breadcrumbs breadcrumbs={["dashboard", "students"]} /> */}
 
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex justify-between items-center ">
         <h2 className="text-2xl font-semibold text-foreground">
           Student Management
         </h2>
@@ -160,7 +170,7 @@ const StudentManagement = () => {
         onSort={handleSort} // Now only passes sortOrder, not sortBy
         actions={(student) => (
           <div className="flex gap-2">
-            <Button size="sm" variant="outline" asChild>
+            <Button size="sm" variant="outline" asChild className="cursor-pointer">
               <a href={`/dashboard/edit-student/${student.email}`}>
                 <Pencil1Icon className="w-4 h-4 mr-1" />
                 Edit
@@ -170,6 +180,7 @@ const StudentManagement = () => {
               size="sm"
               variant="destructive"
               onClick={() => handleDeleteClick(student as IUser)}
+              className="cursor-pointer"
             >
               <TrashIcon className="w-4 h-4 mr-1" />
               Delete
@@ -183,6 +194,7 @@ const StudentManagement = () => {
         onClose={() => setDeleteModalOpen(false)}
         onConfirm={handleConfirmDelete}
         itemName={selectedStudent?.name}
+        loading={isDeleteLoading}
       />
     </section>
   );
