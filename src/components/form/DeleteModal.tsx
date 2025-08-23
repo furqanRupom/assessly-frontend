@@ -4,8 +4,8 @@ import {
     DialogDescription,
     DialogHeader,
     DialogTitle,
-} from "../ui/dialog";
-import { Button } from "../ui/button";
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 import { AlertCircle, Loader2, Trash2, X } from "lucide-react";
 
 interface DeleteModalProps {
