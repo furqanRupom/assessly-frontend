@@ -177,7 +177,7 @@ const CustomTable = <T extends Record<string, any>>({
                                     </div>
                                 </TableCell>
                             </TableRow>
-                        ) : data.length === 0 ? (
+                        ) : data.length ===   0 ? (
                             // Empty state
                             <TableRow>
                                 <TableCell

@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { BookOpen, ShieldCheck, BarChart2, Clock, Award, Users, Globe, ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-const About = () => {
+const About = () =>  {
     // Animation variants
     const container = {
         hidden: { opacity: 0 },

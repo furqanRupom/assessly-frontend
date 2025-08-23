@@ -1,14 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import {
-    Home,
-    BookOpen,
-    BarChart2,
-    Award,
-    CheckCircle,
     Settings,
-    Users,
-    FileText,
     ChevronLeft,
     ChevronRight,
     PlusCircle
@@ -16,7 +9,6 @@ import {
 import { Link, useLocation } from "react-router-dom";
 import { sidebarGenerator, type INavItem } from "../../utils/sidebarGenerator";
 import { AdminSidebarPaths } from "../../routes/admin.routes";
-import type { IRoutePath } from "../../interfaces/routes.interface";
 import { useUser } from "../../hooks/useUser";
 import { StudentSidebarPaths } from "../../routes/student.routes";
 import { SuperAdminSidebarPaths } from "../../routes/superAdmin.routes";
@@ -26,15 +18,7 @@ export default function Sidebar() {
     const location = useLocation();
     const user = useUser()
 
-    const navItems = [
-        { to: "/", icon: <Home size={18} />, label: "Dashboard" },
-        { to: "/projects", icon: <BookOpen size={18} />, label: "Projects" },
-        { to: "/analytics", icon: <BarChart2 size={18} />, label: "Analytics" },
-        { to: "/team", icon: <Users size={18} />, label: "Team" },
-        { to: "/tasks", icon: <CheckCircle size={18} />, label: "Tasks" },
-        { to: "/documents", icon: <FileText size={18} />, label: "Documents" },
-        { to: "/rewards", icon: <Award size={18} />, label: "Rewards" },
-    ];
+
 
     const secondaryItems = [
         { to: "/settings", icon: <Settings size={18} />, label: "Settings" }
