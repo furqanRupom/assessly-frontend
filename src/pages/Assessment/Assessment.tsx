@@ -1,14 +1,14 @@
 // Assessment.tsx
 import React, { useState, useEffect } from 'react';
-
 import AssessmentSelection from './components/AssessmentSelection';
 import AssessmentInstructions from './components/AssessmentInstructionts';
 import ActiveAssessment from './components/ActiveAssessment';
 import AssessmentCompletion from './components/AssessmentCompletion';
 import { useStartAssessmentMutation, useSubmitAssessmentMutation } from '@/redux/features/assessment/assessmentApi';
-import { useGetQuestionsQuery } from '@/redux/features/assessment/questionApi';
+import { useGetQuestionsByAssessmentQuery, useGetQuestionsQuery } from '@/redux/features/assessment/questionApi';
 import { ASSESSMENT_STEPS } from '@/constants/assessmentData';
-import type { AssessmentState, Question } from '@/interfaces/assessment';
+import type { AssessmentState, Question, StartAssessmentResponse, SubmitAssessmentData, SubmitAssessmentResponse } from '@/interfaces/assessment';
+import { useUser } from '@/hooks/useUser';
 
 const Assessment: React.FC = () => {
     const [assessmentState, setAssessmentState] = useState<AssessmentState['assessmentState']>('selection');
@@ -21,16 +21,25 @@ const Assessment: React.FC = () => {
     const [showReview, setShowReview] = useState<boolean>(false);
     const [assessmentId, setAssessmentId] = useState<string>('');
     const [questions, setQuestions] = useState<Question[]>([]);
+    const [assessmentResults, setAssessmentResults] = useState<SubmitAssessmentData | null>(null);
+    const user = useUser()
 
     // RTK Query hooks
     const [startAssessment, { isLoading: isStarting }] = useStartAssessmentMutation();
     const [submitAssessment, { isLoading: isSubmitting }] = useSubmitAssessmentMutation();
 
-    // Get questions data when we have question IDs
-    const { data: questionsData, isLoading: isLoadingQuestions } = useGetQuestionsQuery(
-        assessmentId ? questions.map(q => q._id) : [],
-        { skip: !assessmentId || questions.length === 0 }
-    );
+    // Get questions data when we have an assessment ID
+    // const { data: questionsData, isLoading: isLoadingQuestions } = useGetQuestionsQuery(
+    //     assessmentId ? [{ name: 'assessment', value: assessmentId }] : [],
+    //     { skip: !assessmentId }
+    // );
+    const { data: questionsData, isLoading: isAssessmentQuestionLoading } = useGetQuestionsByAssessmentQuery(assessmentId, {
+        skip: !assessmentId, pollingInterval: 0,
+        refetchOnMountOrArgChange: false,
+        refetchOnFocus: false,
+        refetchOnReconnect: false
+    })
+
 
     // Timer effect
     useEffect(() => {
@@ -56,16 +65,22 @@ const Assessment: React.FC = () => {
 
     // Update questions when data is fetched
     useEffect(() => {
-        if (questionsData) {
-            setQuestions(questionsData);
+        if (questionsData?.data) {
+            setQuestions(questionsData.data.questions);
         }
     }, [questionsData]);
 
     const handleStartAssessment = async () => {
         try {
-            const result = await startAssessment(selectedStep).unwrap();
-            setAssessmentId(result._id);
-            setQuestions(result.questions as unknown as Question[]); // This will be replaced by actual questions data
+            // Get student ID from your auth state or context
+            const studentId = user ? user.userId : ""; // Replace with actual user ID from your auth system
+
+            const result = await startAssessment({
+                studentId,
+                step: selectedStep
+            }).unwrap() as StartAssessmentResponse;
+
+            setAssessmentId(result?.data._id);
             setAssessmentState('active');
             setTimeRemaining(ASSESSMENT_STEPS[selectedStep].duration * 60);
             setIsTimerActive(true);
@@ -104,10 +119,12 @@ const Assessment: React.FC = () => {
             }));
 
             const result = await submitAssessment({
-                assessmentId,
+                testSessionId: assessmentId,
                 answers: answerArray
-            }).unwrap();
+            }).unwrap() as SubmitAssessmentResponse;
+            console.log(result.data)
 
+            setAssessmentResults(result.data);
             setAssessmentState('completed');
         } catch (error) {
             console.error('Failed to submit assessment:', error);
@@ -115,12 +132,12 @@ const Assessment: React.FC = () => {
         }
     };
 
-    if (isStarting || isLoadingQuestions) {
+    if (isStarting || isAssessmentQuestionLoading) {
         return <div className="min-h-screen bg-primary-50 flex items-center justify-center">Loading assessment...</div>;
     }
 
     return (
-        <div className="min-h-screen bg-primary-50">
+        <div className="min-h-screen bg-primary-50 my-20">
             {assessmentState === 'selection' && (
                 <AssessmentSelection
                     selectedStep={selectedStep}
@@ -158,7 +175,7 @@ const Assessment: React.FC = () => {
                 />
             )}
 
-            {assessmentState === 'completed' && (
+            {assessmentState === 'completed' && assessmentResults && (
                 <AssessmentCompletion
                     questions={questions}
                     assessmentData={ASSESSMENT_STEPS[selectedStep]}

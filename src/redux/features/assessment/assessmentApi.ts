@@ -1,47 +1,38 @@
-// services/assessmentApi.ts
-import type { AssessmentData, AssessmentResults, StartAssessmentResponse, StudentAssessment, SubmitAssessmentRequest } from '@/interfaces/assessment';
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+// redux/features/assessment/assessmentApi.ts
+import { baseApi } from '@/redux/api/baseApi';
+import type { StartAssessmentResponse, SubmitAssessmentResponse, SubmitAssessmentRequest } from '@/interfaces/assessment';
 
+interface StartAssessmentRequest {
+    studentId: string;
+    step: number;
+}
 
-export const assessmentApi = createApi({
-    reducerPath: 'assessmentApi',
-    baseQuery: fetchBaseQuery({
-        baseUrl: '/api/assessments/',
-        prepareHeaders: (headers, { getState }) => {
-            const token = (getState() as any).auth.token;
-            if (token) {
-                headers.set('authorization', `Bearer ${token}`);
-            }
-            return headers;
-        },
-    }),
-    tagTypes: ['Assessment'],
+const assessmentApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
-        startAssessment: builder.mutation<StartAssessmentResponse, number>({
-            query: (step) => ({
-                url: 'start',
-                method: 'POST',
-                body: { step },
+        startAssessment: builder.mutation<StartAssessmentResponse, StartAssessmentRequest>({
+            query: (data) => ({
+                url: "/assessment/start-assessment",
+                method: "POST",
+                body: data
             }),
-            invalidatesTags: ['Assessment'],
+            invalidatesTags: ['assessment']
         }),
-        submitAssessment: builder.mutation<AssessmentResults, SubmitAssessmentRequest>({
-            query: (body) => ({
-                url: 'submit',
-                method: 'POST',
-                body,
+        submitAssessment: builder.mutation<SubmitAssessmentResponse, SubmitAssessmentRequest>({
+            query: (data) => ({
+                url: "/assessment/submit-assessment",
+                method: "POST",
+                body: data
             }),
-            invalidatesTags: ['Assessment'],
+            invalidatesTags: ['assessment']
         }),
-        getAssessment: builder.query<AssessmentData, string>({
-            query: (id) => `${id}`,
-            providesTags: ['Assessment'],
+        getAssessment: builder.query({
+            query: (id) => `/assessment/${id}`
         }),
-        getStudentAssessments: builder.query<StudentAssessment[], void>({
-            query: () => 'student-results',
-            providesTags: ['Assessment'],
-        }),
-    }),
+        getStudentAssessments: builder.query({
+            query: () => "/assessment/results",
+            providesTags: ['assessment']
+        })
+    })
 });
 
 export const {

@@ -1,30 +1,40 @@
-// services/questionsApi.ts
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import type { Question } from '@/interfaces/assessment';
+// redux/features/assessment/questionApi.ts
+import type { IAssessmentQuestion, Question } from '@/interfaces/assessment';
+import { baseApi } from '@/redux/api/baseApi';
+import type { IQueryParams } from '@/interfaces/admin.interface';
+import type { IResponse } from '@/interfaces/interface';
 
-export const questionsApi = createApi({
-    reducerPath: 'questionsApi',
-    baseQuery: fetchBaseQuery({
-        baseUrl: '/api/questions/',
-        prepareHeaders: (headers, { getState }) => {
-            const token = (getState() as any).auth.token;
-            if (token) {
-                headers.set('authorization', `Bearer ${token}`);
-            }
-            return headers;
-        },
-    }),
-    tagTypes: ['Question'],
+const questionsApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
-        getQuestions: builder.query<Question[], string[]>({
-            query: (questionIds) => ({
-                url: 'batch',
-                method: 'POST',
-                body: { questionIds },
-            }),
-            providesTags: ['Question'],
+        getQuestions: builder.query({
+            query: (args: IQueryParams[]) => {
+                const params = new URLSearchParams()
+                if (args) {
+                    args.forEach((item: IQueryParams) => {
+                        params.append(item.name, item.value as string)
+                    })
+                }
+                return {
+                    url: "/question",
+                    method: "GET",
+                    params
+                }
+            },
+            transformResponse: (response: IResponse<Question[]>) => {
+                return {
+                    meta: response.meta,
+                    data: response.data
+                }
+            },
+            providesTags: ['question']
         }),
-    }),
+        getQuestionsByAssessment: builder.query({
+            query: (assessmentId: string) => ({
+                url: `/assessment/questions/${assessmentId}`,
+                method: "GET",
+            }),
+        })
+    })
 });
 
-export const { useGetQuestionsQuery } = questionsApi;
+export const { useGetQuestionsQuery,useGetQuestionsByAssessmentQuery } = questionsApi;

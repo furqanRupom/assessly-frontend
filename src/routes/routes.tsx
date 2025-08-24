@@ -9,14 +9,8 @@ import ForgotPassword from "../pages/ForgotPassword/ForgotPassowrd";
 import EmailVerify from "../pages/EmailVerify/EmailVerify";
 import ResetPassword from "../pages/ResetPassword/ResetPassword";
 import  DashboardLayout from "../layout/DashboardLayout";
-// import About from "../pages/About";
-// import { routesGenerator } from "../utils/routesGenerator";
-// import { AdminSidebarPaths } from "./admin.routes";
-// import { FacultyPaths } from "./faculty.routes";
-// import { StudentPaths } from "./student.routes";
-// // import Login from "../pages/Login";
+
 import {ProtectedRoute} from "../private/ProtectedRoute";
-import StudentHome from "../pages/dashboard/student/StudentHome";
 import { routesGenerator } from "../utils/routesGenerator";
 import { StudentSidebarPaths } from "./student.routes";
 import { AdminSidebarPaths } from "./admin.routes";

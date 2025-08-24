@@ -20,7 +20,6 @@ const adminApi = baseApi.injectEndpoints({
                 }
             },
             transformResponse: (response: IResponse<IUser[]>) => {
-                console.log(response)
                 return {
                     meta: response.data,
                     data: response.data

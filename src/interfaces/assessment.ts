@@ -6,6 +6,7 @@ export interface Question {
     question: string;
     options: string[];
     correctAnswer: string;
+    createdBy: string;
 }
 
 export type CompetencyLevel = "A1" | "A2" | "B1" | "B2" | "C1" | "C2";
@@ -30,6 +31,21 @@ export interface AssessmentData {
     certifiedLevel?: string;
 }
 
+export interface IAssessmentQuestion {
+    data:{
+        _id: string;
+        student: string;
+        step: number;
+        questions: Question[];
+        answers: Answer[];
+        startTime: Date;
+        endTime?: Date;
+        completed: boolean;
+        score?: number;
+        certifiedLevel?: string;
+    }
+}
+
 export interface Answer {
     questionId: string;
     answer: string;
@@ -47,24 +63,42 @@ export interface AssessmentState {
     assessmentId?: string;
 }
 
-export interface AssessmentResults {
+export interface StartAssessmentResponse {
+    success:boolean,
+    message:string,
+    data:{
+        _id: string;
+        student: string;
+        step: number;
+        questions: string[];
+        answers: Answer[];
+        startTime: Date;
+        completed: boolean;
+    }
+}
+
+export interface SubmitAssessmentResponse {
+   data:{
+       score: number;
+       certifiedLevel: string;
+       proceedToNextStep: boolean;
+       correctAnswers: number;
+       totalQuestions: number;
+       timeSpent: number;
+   }
+}
+
+export interface SubmitAssessmentData {
     score: number;
     certifiedLevel: string;
     proceedToNextStep: boolean;
-}
-
-export interface StartAssessmentResponse {
-    _id: string;
-    student: string;
-    step: number;
-    questions: string[];
-    answers: Answer[];
-    startTime: Date;
-    completed: boolean;
+    correctAnswers: number;
+    totalQuestions: number;
+    timeSpent: number;
 }
 
 export interface SubmitAssessmentRequest {
-    assessmentId: string;
+    testSessionId: string;
     answers: { questionId: string; answer: string }[];
 }
 
