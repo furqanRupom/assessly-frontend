@@ -21,6 +21,7 @@ import { routesGenerator } from "../utils/routesGenerator";
 import { StudentSidebarPaths } from "./student.routes";
 import { AdminSidebarPaths } from "./admin.routes";
 import { SuperAdminSidebarPaths } from "./superAdmin.routes";
+import Assessment from "@/pages/Assessment/Assessment";
 // import ChangePassword from "../pages/ChangePassword";
 
 const router = createBrowserRouter([
@@ -34,6 +35,10 @@ const router = createBrowserRouter([
       {
         path: "/about",
         element: <About />,
+      },
+      {
+        path:"/assessments",
+        element: <ProtectedRoute role="student"><Assessment /></ProtectedRoute>
       }
     ],
   },

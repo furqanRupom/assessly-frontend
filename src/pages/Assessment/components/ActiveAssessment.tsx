@@ -33,8 +33,7 @@ const ActiveAssessment: React.FC<ActiveAssessmentProps> = ({
     answers,
     handleAnswerSelect,
     timeRemaining,
-    isTimerActive,
-    setIsTimerActive,
+
     flaggedQuestions,
     toggleFlag,
     showReview,

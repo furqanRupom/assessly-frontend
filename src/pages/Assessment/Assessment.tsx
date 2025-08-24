@@ -5,7 +5,7 @@ import AssessmentSelection from './components/AssessmentSelection';
 import AssessmentInstructions from './components/AssessmentInstructionts';
 import ActiveAssessment from './components/ActiveAssessment';
 import AssessmentCompletion from './components/AssessmentCompletion';
-import { useStartAssessmentMutation, useSubmitAssessmentMutation } from '@/redux/features/assessment/assesmentApi';
+import { useStartAssessmentMutation, useSubmitAssessmentMutation } from '@/redux/features/assessment/assessmentApi';
 import { useGetQuestionsQuery } from '@/redux/features/assessment/questionApi';
 import { ASSESSMENT_STEPS } from '@/constants/assessmentData';
 import type { AssessmentState, Question } from '@/interfaces/assessment';
