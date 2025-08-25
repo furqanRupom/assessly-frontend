@@ -16,6 +16,8 @@ import { StudentSidebarPaths } from "./student.routes";
 import { AdminSidebarPaths } from "./admin.routes";
 import { SuperAdminSidebarPaths } from "./superAdmin.routes";
 import Assessment from "@/pages/Assessment/Assessment";
+import StudentDashboardLayout from "@/layout/StudentLayout";
+import HowItWorks from "@/pages/HowItWorks/HowItWorks";
 // import ChangePassword from "../pages/ChangePassword";
 
 const router = createBrowserRouter([
@@ -30,16 +32,16 @@ const router = createBrowserRouter([
         path: "/about",
         element: <About />,
       },
-      {
-        path:"/assessments",
-        element: <ProtectedRoute role="student"><Assessment /></ProtectedRoute>
-      }
+     {
+      path:"/how-it-works",
+      element:<HowItWorks />
+     }
     ],
   },
   
   {
     path: "/student",
-    element: <ProtectedRoute role="student"><DashboardLayout /></ProtectedRoute>,
+    element: <ProtectedRoute role="student"><StudentDashboardLayout /></ProtectedRoute>,
     children: routesGenerator(StudentSidebarPaths)
   },
   {

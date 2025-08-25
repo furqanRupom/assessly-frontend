@@ -32,8 +32,8 @@ export const getProgressStats = (questions: any[], answers: Record<string, strin
 
 export const getCompetencyColor = (level: CompetencyLevel): string => {
     switch (level) {
-        case CompetencyLevel.A1: return 'bg-blue-100 text-blue-800';
-        case CompetencyLevel.A2: return 'bg-blue-200 text-blue-800';
+        case CompetencyLevel.A1: return 'bg-primary-100 text-primary-800';
+        case CompetencyLevel.A2: return 'bg-primary-200 text-primary-800';
         case CompetencyLevel.B1: return 'bg-green-100 text-green-800';
         case CompetencyLevel.B2: return 'bg-green-200 text-green-800';
         case CompetencyLevel.C1: return 'bg-purple-100 text-purple-800';

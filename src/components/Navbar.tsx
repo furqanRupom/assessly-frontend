@@ -48,7 +48,7 @@ const Navbar = () => {
     const navLinks = [
         { name: 'Home', path: '/' },
         { name: 'About', path: '/about' },
-        { name: 'Assessments', path: '/assessments' },
+        { name: 'How it works', path: '/how-it-works' },
     ];
 
     const isActiveLink = (path: string) => {

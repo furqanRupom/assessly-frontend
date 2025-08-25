@@ -137,7 +137,7 @@ const Assessment: React.FC = () => {
     }
 
     return (
-        <div className="min-h-screen bg-primary-50 my-20">
+        <div className="min-h-screen bg-primary-50 ">
             {assessmentState === 'selection' && (
                 <AssessmentSelection
                     selectedStep={selectedStep}

@@ -108,8 +108,8 @@ const AssessmentCompletion: React.FC<AssessmentCompletionProps> = ({
                         Your Certification Level
                     </h3>
                     <div className={`inline-flex items-center px-6 py-3 rounded-full text-lg font-bold ${score >= 75 ? 'bg-primary-100 text-primary-800' :
-                            score >= (selectedStep === 1 ? 25 : 50) ? 'bg-secondary-100 text-secondary-800' :
-                                'bg-red-100 text-red-800'
+                        score >= (selectedStep === 1 ? 25 : 50) ? 'bg-secondary-100 text-secondary-800' :
+                            'bg-red-100 text-red-800'
                         }`}>
                         {certifiedLevel}
                     </div>
@@ -146,8 +146,8 @@ const AssessmentCompletion: React.FC<AssessmentCompletionProps> = ({
                     </button>
                 </div>
 
-                <div className="mt-8 p-6 bg-blue-50 rounded-xl text-left">
-                    <h3 className="text-lg font-bold text-blue-900 mb-3">Assessment Summary</h3>
+                <div className="mt-8 p-6 bg-primary-50 rounded-xl text-left">
+                    <h3 className="text-lg font-bold text-primary-900 mb-3">Assessment Summary</h3>
                     <div className="grid grid-cols-2 gap-4 text-sm">
                         <div>
                             <span className="font-medium">Time Spent:</span> {formatTime(timeSpent)}

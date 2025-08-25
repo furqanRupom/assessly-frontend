@@ -16,11 +16,8 @@ const AssessmentSelection: React.FC<AssessmentSelectionProps> = ({
 }) => {
     return (
         <div className="max-w-6xl mx-auto p-6">
-            <div className="text-center mb-12 pt-8">
-                <div className="inline-flex items-center px-4 py-2 rounded-full bg-primary-100 text-primary-700 text-sm font-semibold mb-6">
-                    <BookOpen className="w-4 h-4 mr-2" />
-                    Digital Competency Assessment
-                </div>
+            <div className="text-center mb-12">
+         
                 <h1 className="text-4xl font-bold text-gray-900 mb-4">Choose Your Assessment Level</h1>
                 <p className="text-xl text-gray-600 max-w-3xl mx-auto">
                     Select the appropriate step based on your current digital skills level. Each step builds upon the previous one.

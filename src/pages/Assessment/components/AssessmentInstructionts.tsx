@@ -92,7 +92,7 @@ const AssessmentInstructions: React.FC<AssessmentInstructionsProps> = ({
                             <div className="text-gray-600">Full Certification</div>
                         </div>
                         <div className="text-center p-3 bg-white rounded-lg">
-                            <div className="font-bold text-blue-600">25-74%</div>
+                            <div className="font-bold text-primary-600">25-74%</div>
                             <div className="text-gray-600">Partial Competency</div>
                         </div>
                         <div className="text-center p-3 bg-white rounded-lg">

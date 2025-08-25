@@ -1,0 +1,207 @@
+import React from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import {
+    Home,
+    ClipboardCheck,
+    History,
+    User,
+    Bell,
+    LogOut,
+    Settings,
+    ChevronDown,
+    GraduationCap,
+    Menu
+} from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import {
+    Sheet,
+    SheetContent,
+    SheetHeader,
+    SheetTitle,
+    SheetTrigger,
+} from '@/components/ui/sheet';
+import { Badge } from '@/components/ui/badge';
+import { motion } from 'framer-motion';
+
+const Header: React.FC = () => {
+    const location = useLocation();
+    const navigate = useNavigate();
+
+    const navItems = [
+        { id: 'dashboard', label: 'Dashboard', icon: Home, path: '/student/dashboard' },
+        { id: 'assessments', label: 'Assessments', icon: ClipboardCheck, path: '/student/assessments' },
+        { id: 'history', label: 'History', icon: History, path: '/student/history' },
+        { id: 'profile', label: 'Profile', icon: User, path: '/student/profile' },
+    ];
+
+    const isActive = (path: string) => location.pathname === path;
+
+    return (
+        <nav className="bg-white/95 backdrop-blur-xl border-b border-gray-200/50 sticky top-0 z-50">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6">
+                <div className="flex items-center justify-between py-3">
+                    {/* Logo */}
+                    <motion.div whileHover={{ scale: 1.01 }}>
+                        <Link to="/" className="flex items-center space-x-2">
+                            <div className="w-10 h-10 rounded-full bg-primary-600 flex items-center justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-6 h-6 text-white">
+                                    <path fill="currentColor" d="M12 2L4 5v6.09c0 5.05 3.41 9.76 8 10.91 4.59-1.15 8-5.86 8-10.91V5l-8-3zm0 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm1.65-2.65L11.5 12.2V9h1v2.79l1.85 1.85-.7.71z" />
+                                </svg>
+                            </div>
+                            <span className="text-2xl font-bold text-primary-600 tracking-tight">Assessly</span>
+                        </Link>
+                    </motion.div>
+
+                    {/* Desktop Navigation */}
+                    <div className="hidden md:flex items-center gap-6">
+                        {navItems.map((item) => {
+                            const Icon = item.icon;
+                            const active = isActive(item.path);
+
+                            return (
+                                <button
+                                    key={item.id}
+                                    onClick={() => navigate(item.path)}
+                                    className="relative flex flex-col items-center cursor-pointer px-1 py-2 font-medium transition-colors"
+                                >
+                                    <div className="flex items-center gap-2 text-gray-600 hover:text-primary-700">
+                                        <Icon size={16} />
+                                        <span>{item.label}</span>
+                                    </div>
+                                    {active && (
+                                        <motion.div
+                                            className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary-600 rounded-t-full"
+                                            layoutId="activeNavItem"
+                                            transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                                        />
+                                    )}
+                                </button>
+                            );
+                        })}
+                    </div>
+
+                    {/* Right Actions */}
+                    <div className="flex items-center gap-2">
+                        {/* Notifications */}
+                        <Sheet>
+                            <SheetTrigger asChild>
+                                <Button variant="ghost" size="icon" className="relative rounded-xl">
+                                    <Bell size={18} className="text-gray-600" />
+                                    <Badge className="absolute -top-1 -right-1 px-1 py-0 min-w-0 w-4 h-4 flex items-center justify-center text-xs">
+                                        3
+                                    </Badge>
+                                </Button>
+                            </SheetTrigger>
+                            <SheetContent className="rounded-l-2xl mt-4 mr-4 h-[95vh]">
+                                <SheetHeader className="text-left">
+                                    <SheetTitle>Notifications</SheetTitle>
+                                </SheetHeader>
+                                <div className="mt-6 space-y-4">
+                                    {[
+                                        { title: 'New assessment available', desc: 'Mathematics Quiz #5', time: '5m ago' },
+                                        { title: 'Grade updated', desc: 'Physics Assignment - 92%', time: '1h ago' },
+                                        { title: 'Reminder', desc: 'Complete Chemistry lab report', time: '2h ago' },
+                                    ].map((notif, i) => (
+                                        <motion.div
+                                            key={i}
+                                            initial={{ opacity: 0, y: 10 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            transition={{ delay: i * 0.1 }}
+                                            className="p-3 bg-gray-50 rounded-xl"
+                                        >
+                                            <p className="font-semibold text-sm text-gray-900">{notif.title}</p>
+                                            <p className="text-sm text-gray-600">{notif.desc}</p>
+                                            <p className="text-xs text-gray-400 mt-1">{notif.time}</p>
+                                        </motion.div>
+                                    ))}
+                                </div>
+                            </SheetContent>
+                        </Sheet>
+
+                        {/* Profile Dropdown */}
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button variant="ghost" className="flex items-center gap-2 rounded-xl">
+                                    <div className="w-8 h-8 bg-gradient-to-br from-primary-400 to-primary-600 rounded-xl flex items-center justify-center">
+                                        <span className="text-white font-semibold text-xs">JD</span>
+                                    </div>
+                                    <div className="hidden md:block text-left">
+                                        <p className="text-sm font-semibold text-gray-900">John Doe</p>
+                                        <p className="text-xs text-gray-500">Student</p>
+                                    </div>
+                                    <ChevronDown size={16} className="text-gray-400" />
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end" className="w-56 rounded-xl overflow-visible">
+                                <div className="px-2 py-1.5">
+                                    <p className="font-semibold text-sm">John Doe</p>
+                                    <p className="text-xs text-gray-500">john.doe@university.edu</p>
+                                </div>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem className="cursor-pointer rounded-lg">
+                                    <Settings className="mr-2 h-4 w-4" />
+                                    <span>Settings</span>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem className="cursor-pointer rounded-lg">
+                                    <LogOut className="mr-2 h-4 w-4" />
+                                    <span>Sign out</span>
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+
+                        {/* Mobile Navigation Trigger */}
+                        <Sheet>
+                            <SheetTrigger asChild className="md:hidden">
+                                <Button variant="ghost" size="icon">
+                                    <Menu className="w-5 h-5" />
+                                </Button>
+                            </SheetTrigger>
+                            <SheetContent side="left" className="rounded-r-2xl mt-4 ml-4 w-64">
+                                <SheetHeader className="text-left mb-6">
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-10 h-10 bg-gradient-to-br from-primary-600 to-primary-800 rounded-xl flex items-center justify-center shadow-md">
+                                            <GraduationCap size={20} className="text-white" />
+                                        </div>
+                                        <div>
+                                            <SheetTitle className="bg-gradient-to-r from-primary-900 to-primary-700 bg-clip-text text-transparent">
+                                                EduPortal
+                                            </SheetTitle>
+                                            <p className="text-xs text-gray-500">Learning Management</p>
+                                        </div>
+                                    </div>
+                                </SheetHeader>
+                                <div className="space-y-2">
+                                    {navItems.map((item) => {
+                                        const Icon = item.icon;
+                                        const active = isActive(item.path);
+
+                                        return (
+                                            <Button
+                                                key={item.id}
+                                                onClick={() => navigate(item.path)}
+                                                variant={active ? "default" : "ghost"}
+                                                className="w-full justify-start gap-3 rounded-xl cursor-pointer"
+                                            >
+                                                <Icon size={18} />
+                                                <span>{item.label}</span>
+                                            </Button>
+                                        );
+                                    })}
+                                </div>
+                            </SheetContent>
+                        </Sheet>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    );
+};
+
+export default Header;
