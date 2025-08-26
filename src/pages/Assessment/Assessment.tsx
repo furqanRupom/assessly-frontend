@@ -9,6 +9,7 @@ import { useGetQuestionsByAssessmentQuery, useGetQuestionsQuery } from '@/redux/
 import { ASSESSMENT_STEPS } from '@/constants/assessmentData';
 import type { AssessmentState, Question, StartAssessmentResponse, SubmitAssessmentData, SubmitAssessmentResponse } from '@/interfaces/assessment';
 import { useUser } from '@/hooks/useUser';
+import { AssessmentLoader } from '@/components/loader/Loader';
 
 const Assessment: React.FC = () => {
     const [assessmentState, setAssessmentState] = useState<AssessmentState['assessmentState']>('selection');
@@ -133,7 +134,7 @@ const Assessment: React.FC = () => {
     };
 
     if (isStarting || isAssessmentQuestionLoading) {
-        return <div className="min-h-screen bg-primary-50 flex items-center justify-center">Loading assessment...</div>;
+        return <div className="min-h-screen bg-primary-50 flex items-center justify-center"><AssessmentLoader size='lg' /></div>;
     }
 
     return (

@@ -1,8 +1,9 @@
-import { History, Home, Workflow } from "lucide-react";
+import { History, Home, User, Workflow } from "lucide-react";
 import AdminDashboard from "../pages/dashboard/admin/AdminDashboard";
 import StudentHome from "../pages/dashboard/student/StudentHome";
 import MyAssessments from "../pages/dashboard/student/assessments/MyAssessments";
 import Assessment from "@/pages/Assessment/Assessment";
+import ProfilePage from "@/pages/profile/Profile";
 
 export const StudentSidebarPaths = [
     {
@@ -22,6 +23,11 @@ export const StudentSidebarPaths = [
       path:"history",
       icon:<History size ={19} />,
       element:<MyAssessments />
-
-    }
+    },
+  {
+    name: "Profile",
+    path: "profile",
+    icon: <User size={19} />,
+    element: <ProfilePage />
+  }
 ]

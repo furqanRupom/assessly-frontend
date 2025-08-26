@@ -29,10 +29,16 @@ import {
 } from '@/components/ui/sheet';
 import { Badge } from '@/components/ui/badge';
 import { motion } from 'framer-motion';
+import { useDispatch } from 'react-redux';
+import { logout } from '@/redux/features/auth/authSlice';
+import { useGetUserProfileQuery } from '@/redux/features/user/userApi';
 
 const Header: React.FC = () => {
     const location = useLocation();
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const { data } = useGetUserProfileQuery({});
+    const profile = data?.data
 
     const navItems = [
         { id: 'dashboard', label: 'Dashboard', icon: Home, path: '/student/dashboard' },
@@ -128,28 +134,28 @@ const Header: React.FC = () => {
                         {/* Profile Dropdown */}
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" className="flex items-center gap-2 rounded-xl">
+                                <Button variant="ghost" className="flex items-center gap-2 rounded-xl cursor-pointer">
                                     <div className="w-8 h-8 bg-gradient-to-br from-primary-400 to-primary-600 rounded-xl flex items-center justify-center">
-                                        <span className="text-white font-semibold text-xs">JD</span>
+                                        <span className="text-white font-semibold text-xs">{profile?.name.slice(0, 2)}</span>
                                     </div>
                                     <div className="hidden md:block text-left">
-                                        <p className="text-sm font-semibold text-gray-900">John Doe</p>
-                                        <p className="text-xs text-gray-500">Student</p>
+                                        <p className="text-sm font-semibold text-gray-900">{profile?.name}</p>
+                                        <p className="text-xs text-gray-500">{profile?.role}</p>
                                     </div>
                                     <ChevronDown size={16} className="text-gray-400" />
                                 </Button>
                             </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end" className="w-56 rounded-xl overflow-visible">
+                            <DropdownMenuContent align="end" className=" rounded-xl overflow-visible">
                                 <div className="px-2 py-1.5">
-                                    <p className="font-semibold text-sm">John Doe</p>
-                                    <p className="text-xs text-gray-500">john.doe@university.edu</p>
+                                    <p className="font-semibold text-sm">{profile?.name}</p>
+                                    <p className="text-xs text-gray-500">{profile?.email}</p>
                                 </div>
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem className="cursor-pointer rounded-lg">
                                     <Settings className="mr-2 h-4 w-4" />
                                     <span>Settings</span>
                                 </DropdownMenuItem>
-                                <DropdownMenuItem className="cursor-pointer rounded-lg">
+                                <DropdownMenuItem onClick={() => dispatch(logout())} className="cursor-pointer rounded-lg">
                                     <LogOut className="mr-2 h-4 w-4" />
                                     <span>Sign out</span>
                                 </DropdownMenuItem>
@@ -165,17 +171,16 @@ const Header: React.FC = () => {
                             </SheetTrigger>
                             <SheetContent side="left" className="rounded-r-2xl mt-4 ml-4 w-64">
                                 <SheetHeader className="text-left mb-6">
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-10 h-10 bg-gradient-to-br from-primary-600 to-primary-800 rounded-xl flex items-center justify-center shadow-md">
-                                            <GraduationCap size={20} className="text-white" />
-                                        </div>
-                                        <div>
-                                            <SheetTitle className="bg-gradient-to-r from-primary-900 to-primary-700 bg-clip-text text-transparent">
-                                                EduPortal
-                                            </SheetTitle>
-                                            <p className="text-xs text-gray-500">Learning Management</p>
-                                        </div>
-                                    </div>
+                                    <motion.div whileHover={{ scale: 1.01 }}>
+                                        <Link to="/" className="flex items-center space-x-2">
+                                            <div className="w-10 h-10 rounded-full bg-primary-600 flex items-center justify-center">
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-6 h-6 text-white">
+                                                    <path fill="currentColor" d="M12 2L4 5v6.09c0 5.05 3.41 9.76 8 10.91 4.59-1.15 8-5.86 8-10.91V5l-8-3zm0 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm1.65-2.65L11.5 12.2V9h1v2.79l1.85 1.85-.7.71z" />
+                                                </svg>
+                                            </div>
+                                            <span className="text-2xl font-bold text-primary-600 tracking-tight">Assessly</span>
+                                        </Link>
+                                    </motion.div>
                                 </SheetHeader>
                                 <div className="space-y-2">
                                     {navItems.map((item) => {
@@ -183,15 +188,27 @@ const Header: React.FC = () => {
                                         const active = isActive(item.path);
 
                                         return (
-                                            <Button
+                                            <motion.div
                                                 key={item.id}
-                                                onClick={() => navigate(item.path)}
-                                                variant={active ? "default" : "ghost"}
-                                                className="w-full justify-start gap-3 rounded-xl cursor-pointer"
+                                                className="relative"
+                                                whileHover={{ scale: 1.02 }}
+                                                whileTap={{ scale: 0.98 }}
                                             >
-                                                <Icon size={18} />
-                                                <span>{item.label}</span>
-                                            </Button>
+                                                <button
+                                                    onClick={() => navigate(item.path)}
+                                                    className="w-full flex items-center gap-3 p-3 rounded-xl cursor-pointer text-left transition-colors"
+                                                >
+                                                    <Icon size={18} className={active ? "text-primary-600" : "text-gray-600"} />
+                                                    <span className={active ? "font-semibold text-primary-600" : "text-gray-600"}>{item.label}</span>
+                                                    {active && (
+                                                        <motion.div
+                                                            className="absolute left-0 top-0 bottom-0 w-1 bg-primary-600 rounded-r-full"
+                                                            layoutId="mobileActiveNavItem"
+                                                            transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                                                        />
+                                                    )}
+                                                </button>
+                                            </motion.div>
                                         );
                                     })}
                                 </div>
