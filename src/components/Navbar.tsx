@@ -1,19 +1,33 @@
-// src/components/Navbar.tsx
-import { useState, useEffect, useRef } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, ChevronDown, User, LayoutDashboard } from 'lucide-react';
-import { useUser } from '../hooks/useUser';
-import { Button } from '@/components/ui/button';
-import PrimaryButton from './button/PrimaryButton';
+import {
+    Menu,
+    X,
+    ChevronDown,
+    User,
+    LayoutDashboard,
+    LogOut,
+    Settings,
+    Bell,
+    Home,
+    Info,
+    HelpCircle
+} from 'lucide-react';
+import { useGetUserProfileQuery } from '@/redux/features/user/userApi';
+import { useDispatch } from 'react-redux';
+import { logout } from '@/redux/features/auth/authSlice';
 
 const Navbar = () => {
     const [scrolled, setScrolled] = useState(false);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const location = useLocation();
-    const user = useUser();
-    const dropdownRef = useRef<HTMLDivElement>(null);
+    const dispatch = useDispatch();
+
+    // Get user profile data
+    const { data, isLoading, error } = useGetUserProfileQuery({});
+    const profile = data?.data;
 
     useEffect(() => {
         const handleScroll = () => {
@@ -22,155 +36,240 @@ const Navbar = () => {
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
+    const navigate = useNavigate();
 
-    useEffect(() => {
-        setMobileMenuOpen(false);
+    const handleLogout = (e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        navigate("/login");
+        dispatch(logout());
         setDropdownOpen(false);
-    }, [location.pathname]);
-
-    // Close dropdown when clicking outside
-    useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
-            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-                setDropdownOpen(false);
-            }
-        };
-
-        if (dropdownOpen) {
-            document.addEventListener('mousedown', handleClickOutside);
-        }
-
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-        };
-    }, [dropdownOpen]);
+        setMobileMenuOpen(false);
+    };
 
     const navLinks = [
-        { name: 'Home', path: '/' },
-        { name: 'About', path: '/about' },
-        { name: 'How it works', path: '/how-it-works' },
+        { name: 'Home', path: '/', icon: Home },
+        { name: 'About', path: '/about', icon: Info },
+        { name: 'How it works', path: '/how-it-works', icon: HelpCircle },
     ];
 
-    const isActiveLink = (path: string) => {
-        return location.pathname === path;
+    const isActiveLink = (path: string) => location.pathname === path;
+
+    // Animation variants
+    const fadeIn = {
+        hidden: { opacity: 0 },
+        visible: {
+            opacity: 1,
+            transition: { duration: 0.3 }
+        }
     };
+
+    const slideIn = {
+        hidden: { x: '100%' },
+        visible: {
+            x: 0,
+            transition: {
+                type: 'tween' as const,
+                duration: 0.3
+            }
+        }
+    };
+
+    const dropdownVariants = {
+        hidden: {
+            opacity: 0,
+            y: -10,
+            scale: 0.95
+        },
+        visible: {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            transition: {
+                duration: 0.2
+            }
+        }
+    };
+
+    // Skeleton components
+    const ProfileSkeleton = () => (
+        <div className="flex items-center space-x-2 p-2">
+            <div className="w-8 h-8 rounded-full bg-gray-200 animate-pulse"></div>
+            <div className="hidden md:block">
+                <div className="h-4 w-24 bg-gray-200 rounded mb-1 animate-pulse"></div>
+                <div className="h-3 w-16 bg-gray-200 rounded animate-pulse"></div>
+            </div>
+            <div className="w-4 h-4 bg-gray-200 rounded animate-pulse"></div>
+        </div>
+    );
+
+    const NavLinksSkeleton = () => (
+        <nav className="hidden md:flex items-center space-x-1">
+            {[1, 2, 3].map((item) => (
+                <div key={item} className="px-4 py-2 rounded-lg flex items-center gap-2">
+                    <div className="w-4 h-4 bg-gray-200 rounded animate-pulse"></div>
+                    <div className="h-4 w-16 bg-gray-200 rounded animate-pulse"></div>
+                </div>
+            ))}
+        </nav>
+    );
 
     return (
         <>
-            <header
+            <motion.header
+                initial={{ y: -100 }}
+                animate={{ y: 0 }}
                 className={`fixed top-0 w-full z-50 transition-all duration-300 ${scrolled
-                        ? 'bg-white/95 backdrop-blur-md shadow-sm border-b border-gray-100'
-                        : 'bg-white/90 backdrop-blur-sm'
+                    ? 'bg-white/95 backdrop-blur-md shadow-sm border-b border-gray-100'
+                    : 'bg-white/90 backdrop-blur-sm'
                     }`}
             >
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex items-center justify-between h-16">
-                        {/* Original Logo - Unchanged */}
-                        <motion.div whileHover={{ scale: 1.05 }}>
+                        {/* Logo */}
+                        <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                             <Link to="/" className="flex items-center space-x-2">
                                 <div className="w-10 h-10 rounded-full bg-primary-600 flex items-center justify-center">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-6 h-6 text-white">
                                         <path fill="currentColor" d="M12 2L4 5v6.09c0 5.05 3.41 9.76 8 10.91 4.59-1.15 8-5.86 8-10.91V5l-8-3zm0 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm1.65-2.65L11.5 12.2V9h1v2.79l1.85 1.85-.7.71z" />
                                     </svg>
                                 </div>
-                                <span className="text-2xl font-bold text-primary-600 tracking-tight">Assessly</span>
+                                <span className="text-2xl font-bold text-primary-600">Assessly</span>
                             </Link>
                         </motion.div>
 
                         {/* Desktop Navigation */}
-                        <nav className="hidden md:flex items-center space-x-1">
-                            {navLinks.map((link) => (
-                                <Link
-                                    key={link.path}
-                                    to={link.path}
-                                    className={`relative px-6 py-2 rounded-lg text-md font-medium transition-all duration-200 ${isActiveLink(link.path)
-                                            ? 'text-primary-600 bg-primary-50'
-                                            : 'text-gray-700 hover:text-gray-900 hover:bg-gray-50'
-                                        }`}
-                                >
-                                    {link.name}
-                                    {isActiveLink(link.path) && (
-                                        <motion.div
-                                            layoutId="activeIndicator"
-                                            className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary-600 rounded-full"
-                                            initial={false}
-                                            transition={{ type: "spring", stiffness: 500, damping: 30 }}
-                                        />
-                                    )}
-                                </Link>
-                            ))}
-                        </nav>
+                        {isLoading ? (
+                            <NavLinksSkeleton />
+                        ) : (
+                            <nav className="hidden md:flex items-center space-x-1">
+                                {navLinks.map((link) => {
+                                    const Icon = link.icon;
+                                    return (
+                                        <Link
+                                            key={link.path}
+                                            to={link.path}
+                                            className={`relative px-4 py-2 rounded-lg text-md font-medium transition-all duration-200 flex items-center gap-2 ${isActiveLink(link.path)
+                                                ? 'text-primary-600 bg-gray-50'
+                                                : 'text-gray-700 hover:text-gray-900 hover:bg-gray-50'
+                                                }`}
+                                        >
+                                            <Icon size={18} />
+                                            {link.name}
+                                            {isActiveLink(link.path) && (
+                                                <motion.div
+                                                    layoutId="activeIndicator"
+                                                    className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary-600 rounded-full"
+                                                    initial={false}
+                                                    transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                                                />
+                                            )}
+                                        </Link>
+                                    );
+                                })}
+                            </nav>
+                        )}
 
                         {/* Right Side - Desktop */}
-                        <div className="hidden md:flex items-center space-x-4">
-                            {user ? (
-                                <div className="relative" ref={dropdownRef}>
-                                    <Button
-                                        variant="ghost"
-                                        className="flex items-center space-x-2 h-9"
-                                        onClick={() => setDropdownOpen(!dropdownOpen)}
-                                    >
-                                        <div className="w-8 h-8 rounded-full bg-primary-100 flex items-center justify-center">
-                                            <User className="w-4 h-4 text-primary-600" />
-                                        </div>
-                                        <motion.div
-                                            animate={{ rotate: dropdownOpen ? 180 : 0 }}
-                                            transition={{ duration: 0.2 }}
+                        <div className="hidden md:flex items-center space-x-3">
+                            {isLoading ? (
+                                <ProfileSkeleton />
+                            ) : profile ? (
+                                <>
+                                    {/* User Profile Dropdown */}
+                                    <motion.div className="relative">
+                                        <button
+                                            className="flex items-center space-x-2 p-2 rounded-lg hover:bg-gray-100 transition-colors"
+                                            onClick={() => setDropdownOpen(!dropdownOpen)}
                                         >
-                                            <ChevronDown className="w-4 h-4" />
-                                        </motion.div>
-                                    </Button>
-
-                                    <AnimatePresence>
-                                        {dropdownOpen && (
+                                            <div className="w-8 h-8 rounded-full bg-primary-600 flex items-center justify-center">
+                                                <span className="text-white text-xs font-semibold">
+                                                    {profile.name?.split(' ').map((n: string) => n[0]).join('').toUpperCase()}
+                                                </span>
+                                            </div>
+                                            <div className="text-left">
+                                                <p className="text-sm font-semibold text-gray-900">{profile.name}</p>
+                                                <p className="text-xs text-gray-500 capitalize">{profile.role}</p>
+                                            </div>
                                             <motion.div
-                                                initial={{ opacity: 0, y: -10, scale: 0.95 }}
-                                                animate={{ opacity: 1, y: 0, scale: 1 }}
-                                                exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                                                animate={{ rotate: dropdownOpen ? 180 : 0 }}
                                                 transition={{ duration: 0.2 }}
-                                                className="absolute right-0 top-full mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-50"
                                             >
-                                                <Link
-                                                    to={`/${user.role}/dashboard`}
-                                                    className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
-                                                    onClick={() => setDropdownOpen(false)}
-                                                >
-                                                    <LayoutDashboard className="mr-2 h-4 w-4" />
-                                                    Dashboard
-                                                </Link>
+                                                <ChevronDown size={16} className="text-gray-400" />
                                             </motion.div>
-                                        )}
-                                    </AnimatePresence>
-                                </div>
+                                        </button>
+
+                                        <AnimatePresence>
+                                            {dropdownOpen && (
+                                                <motion.div
+                                                    variants={dropdownVariants}
+                                                    initial="hidden"
+                                                    animate="visible"
+                                                    exit="hidden"
+                                                    className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-lg border border-gray-200 py-2 z-50"
+                                                >
+                                                    <div className="px-4 py-2 border-b border-gray-100">
+                                                        <p className="font-semibold text-gray-900">{profile.name}</p>
+                                                        <p className="text-sm text-gray-500">{profile.email}</p>
+                                                    </div>
+
+                                                    <Link
+                                                        to={`/${profile.role}/dashboard`}
+                                                        className="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                                                        onClick={() => setDropdownOpen(false)}
+                                                    >
+                                                        <LayoutDashboard className="mr-3 h-4 w-4" />
+                                                        Dashboard
+                                                    </Link>
+
+                                                    <div className="border-t border-gray-100 my-1"></div>
+
+                                                    <button
+                                                        onClick={handleLogout}
+                                                        className="flex items-center w-full px-4 py-3 text-sm text-red-600 hover:bg-red-50 transition-colors"
+                                                    >
+                                                        <LogOut className="mr-3 h-4 w-4" />
+                                                        Sign out
+                                                    </button>
+                                                </motion.div>
+                                            )}
+                                        </AnimatePresence>
+                                    </motion.div>
+                                </>
                             ) : (
                                 <div className="flex items-center space-x-3">
-                                    <Button variant="ghost" asChild>
-                                        <Link to="/login">Sign in</Link>
-                                    </Button>
-                                    <PrimaryButton link='/register'>Get Started</PrimaryButton>
+                                    <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                                        <Link to="/login" className="px-4 py-2 text-gray-700 hover:text-gray-900 font-medium rounded-lg">
+                                            Sign in
+                                        </Link>
+                                    </motion.button>
+                                    <motion.button
+                                        whileHover={{ scale: 1.05 }}
+                                        whileTap={{ scale: 0.95 }}
+                                        className="px-4 py-2 bg-primary-600 text-white font-medium rounded-lg shadow-md hover:shadow-lg transition-shadow"
+                                    >
+                                        <Link to="/register">Get Started</Link>
+                                    </motion.button>
                                 </div>
                             )}
                         </div>
 
                         {/* Mobile Menu Button */}
                         <div className="md:hidden">
-                            <Button
-                                variant="ghost"
-                                size="sm"
+                            <motion.button
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                className="p-2 rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-100"
                                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                             >
-                                {mobileMenuOpen ? (
-                                    <X className="h-5 w-5" />
-                                ) : (
-                                    <Menu className="h-5 w-5" />
-                                )}
-                            </Button>
+                                {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+                            </motion.button>
                         </div>
                     </div>
                 </div>
-            </header>
+            </motion.header>
 
-            {/* Mobile Menu - Side Panel */}
+            {/* Mobile Menu */}
             <AnimatePresence>
                 {mobileMenuOpen && (
                     <>
@@ -185,10 +284,10 @@ const Navbar = () => {
 
                         {/* Mobile Menu Panel */}
                         <motion.div
-                            initial={{ x: '100%' }}
-                            animate={{ x: 0 }}
-                            exit={{ x: '100%' }}
-                            transition={{ type: 'tween', duration: 0.3 }}
+                            variants={slideIn}
+                            initial="hidden"
+                            animate="visible"
+                            exit="hidden"
                             className="fixed top-0 right-0 bottom-0 w-80 max-w-sm bg-white shadow-2xl z-50 md:hidden"
                         >
                             <div className="flex flex-col h-full">
@@ -202,73 +301,111 @@ const Navbar = () => {
                                         </div>
                                         <span className="text-lg font-bold text-gray-900">Menu</span>
                                     </div>
-                                    <Button
-                                        variant="ghost"
-                                        size="sm"
+                                    <motion.button
+                                        whileHover={{ scale: 1.05 }}
+                                        whileTap={{ scale: 0.95 }}
+                                        className="p-2 rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-100"
                                         onClick={() => setMobileMenuOpen(false)}
                                     >
-                                        <X className="w-10 h-10" />
-                                    </Button>
+                                        <X size={24} />
+                                    </motion.button>
                                 </div>
 
                                 {/* Mobile Menu Content */}
-                                <div className="flex-1 px-6 py-4">
+                                <div className="flex-1 px-6 py-4 overflow-y-auto">
                                     <nav className="space-y-2">
-                                        {navLinks.map((link, index) => (
-                                            <motion.div
-                                                key={link.path}
-                                                initial={{ x: 50, opacity: 0 }}
-                                                animate={{ x: 0, opacity: 1 }}
-                                                transition={{ delay: index * 0.1 }}
-                                            >
-                                                <Link
-                                                    to={link.path}
-                                                    onClick={() => setMobileMenuOpen(false)}
-                                                    className={`block px-4 py-3 rounded-lg text-lg font-medium transition-all duration-200 ${isActiveLink(link.path)
-                                                            ? 'bg-primary-50 text-primary-600 border border-primary-200'
-                                                            : 'text-gray-700 hover:bg-gray-50'
-                                                        }`}
+                                        {navLinks.map((link, index) => {
+                                            const Icon = link.icon;
+                                            return (
+                                                <motion.div
+                                                    key={link.path}
+                                                    initial={{ x: 50, opacity: 0 }}
+                                                    animate={{ x: 0, opacity: 1 }}
+                                                    transition={{ delay: index * 0.1 }}
                                                 >
-                                                    {link.name}
-                                                </Link>
-                                            </motion.div>
-                                        ))}
+                                                    <Link
+                                                        to={link.path}
+                                                        onClick={() => setMobileMenuOpen(false)}
+                                                        className={`flex items-center gap-3 px-4 py-3 rounded-lg text-lg font-medium transition-all duration-200 ${isActiveLink(link.path)
+                                                            ? 'bg-gray-50 text-primary-600 border border-primary-200'
+                                                            : 'text-gray-700 hover:bg-gray-50'
+                                                            }`}
+                                                    >
+                                                        <Icon size={20} />
+                                                        {link.name}
+                                                    </Link>
+                                                </motion.div>
+                                            );
+                                        })}
                                     </nav>
 
                                     {/* Mobile User Actions */}
                                     <div className="mt-8 pt-6 border-t border-gray-100">
-                                        {user ? (
+                                        {isLoading ? (
                                             <div className="space-y-3">
                                                 <div className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
-                                                    <div className="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center">
-                                                        <User className="w-5 h-5 text-primary-600" />
-                                                    </div>
+                                                    <div className="w-10 h-10 rounded-full bg-gray-200 animate-pulse"></div>
                                                     <div>
-                                                        <div className="font-medium text-gray-900">Account</div>
+                                                        <div className="h-4 w-24 bg-gray-200 rounded mb-1 animate-pulse"></div>
+                                                        <div className="h-3 w-16 bg-gray-200 rounded animate-pulse"></div>
                                                     </div>
                                                 </div>
-                                                <Button asChild className="w-full">
+                                                <div className="h-12 w-full bg-gray-200 rounded-lg animate-pulse"></div>
+                                                <div className="h-12 w-full bg-gray-200 rounded-lg animate-pulse"></div>
+                                            </div>
+                                        ) : profile ? (
+                                            <div className="space-y-3">
+                                                <div className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
+                                                    <div className="w-10 h-10 rounded-full bg-primary-600 flex items-center justify-center">
+                                                        <span className="text-white text-sm font-semibold">
+                                                            {profile.name?.split(' ').map((n: string) => n[0]).join('').toUpperCase()}
+                                                        </span>
+                                                    </div>
+                                                    <div>
+                                                        <div className="font-medium text-gray-900">{profile.name}</div>
+                                                        <div className="text-sm text-gray-500 capitalize">{profile.role}</div>
+                                                    </div>
+                                                </div>
+                                                <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} className='w-full'>
                                                     <Link
-                                                        to={`/${user.role}/dashboard`}
+                                                        to={`/${profile.role}/dashboard`}
                                                         onClick={() => setMobileMenuOpen(false)}
-                                                        className="flex items-center justify-center"
+                                                        className="px-4 py-3 w-full flex items-center justify-center bg-primary-600 text-white font-medium rounded-lg shadow-md"
                                                     >
-                                                        <LayoutDashboard className="mr-2 h-4 w-4" />
+                                                        <LayoutDashboard className="mr-2 h-5 w-5" />
                                                         Dashboard
                                                     </Link>
-                                                </Button>
+                                                </motion.button>
+                                                <motion.button
+                                                    whileHover={{ scale: 1.02 }}
+                                                    whileTap={{ scale: 0.98 }}
+                                                    onClick={handleLogout}
+                                                    className="w-full px-4 py-3 text-red-600 border border-red-200 rounded-lg hover:bg-red-50 transition-colors flex items-center justify-center"
+                                                >
+                                                    <LogOut className="mr-2 h-5 w-5" />
+                                                    Sign out
+                                                </motion.button>
                                             </div>
                                         ) : (
                                             <div className="space-y-3">
-                                                <Button variant="outline" asChild className="w-full">
+                                                <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} className='w-full'>
                                                     <Link
                                                         to="/login"
                                                         onClick={() => setMobileMenuOpen(false)}
+                                                        className="block w-full px-4 py-3 text-center text-gray-700 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
                                                     >
                                                         Sign in
                                                     </Link>
-                                                </Button>
-                                                <PrimaryButton className='w-full' link="/register">Get Started</PrimaryButton>
+                                                </motion.button>
+                                                <motion.button
+                                                    whileHover={{ scale: 1.02 }}
+                                                    whileTap={{ scale: 0.98 }}
+                                                    className="w-full px-4 py-3 bg-primary-600 text-white font-medium rounded-lg shadow-md"
+                                                >
+                                                    <Link to="/register" onClick={() => setMobileMenuOpen(false)}>
+                                                        Get Started
+                                                    </Link>
+                                                </motion.button>
                                             </div>
                                         )}
                                     </div>
