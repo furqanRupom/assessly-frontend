@@ -13,6 +13,7 @@ const authApi = baseApi.injectEndpoints({
                 method: "POST",
                 body: credentials,
             }),
+            invalidatesTags:['auth']
         }),
         register: builder.mutation({
             query: (credentials) => ({

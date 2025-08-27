@@ -12,6 +12,7 @@ interface QuestionReviewProps {
     timeRemaining: number;
     formatTime: (seconds: number) => string;
     selectedStep: number;
+ 
 }
 
 const QuestionReview: React.FC<QuestionReviewProps> = ({
