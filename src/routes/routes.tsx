@@ -18,6 +18,7 @@ import { SuperAdminSidebarPaths } from "./superAdmin.routes";
 import Assessment from "@/pages/Assessment/Assessment";
 import StudentDashboardLayout from "@/layout/StudentLayout";
 import HowItWorks from "@/pages/HowItWorks/HowItWorks";
+import ProfilePage from "@/pages/profile/Profile";
 // import ChangePassword from "../pages/ChangePassword";
 
 const router = createBrowserRouter([
@@ -116,7 +117,8 @@ const router = createBrowserRouter([
   {
     path: "*",
     element: <NotFound />,
-  }
+  },
+  
 ]);
 
 export default router;

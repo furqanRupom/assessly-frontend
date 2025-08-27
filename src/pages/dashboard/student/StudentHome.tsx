@@ -69,7 +69,7 @@ const PerformanceIndicator: React.FC<{
   trend?: 'up' | 'down' | 'stable';
   trendValue?: number;
 }> = ({ value, label, icon, trend, trendValue }) => (
-  <div className="flex items-center justify-between p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-100">
+  <div className="flex items-center justify-between p-4 bg-gradient-to-r from-primary-50 to-indigo-50 rounded-xl border border-primary-100">
     <div className="flex items-center space-x-3">
       <div className="p-2 bg-white rounded-lg shadow-sm">
         {icon}
@@ -96,7 +96,7 @@ const StudentDashboard: React.FC = () => {
   const { data: competencyPerformanceData, isLoading: loadingPerformance } = useGetCompetencyPerformanceQuery({});
   const { data: studyRecommendationsData, isLoading: loadingRecommendations } = useGetStudyRecommendationsQuery({});
   const { data: dailyActivityData, isLoading: loadingActivity } = useGetDailyActivityQuery({});
-  const {data:profile} = useGetUserProfileQuery({})
+  const { data: profile } = useGetUserProfileQuery({})
   const profileData = profile?.data
   // Calculate overall metrics
   const overallAccuracy = React.useMemo(() => {
@@ -145,7 +145,7 @@ const StudentDashboard: React.FC = () => {
           <PerformanceIndicator
             value={overallAccuracy}
             label="Overall Accuracy"
-            icon={<Target className="h-5 w-5 text-blue-600" />}
+            icon={<Target className="h-5 w-5 text-primary-600" />}
             trend="up"
             trendValue={5}
           />
@@ -174,14 +174,14 @@ const StudentDashboard: React.FC = () => {
           <Card className="shadow-lg border-0 bg-white/80 backdrop-blur-sm">
             <CardHeader className="pb-4">
               <CardTitle className="flex items-center space-x-2">
-                <BookOpen className="h-5 w-5 text-blue-600" />
+                <BookOpen className="h-5 w-5 text-primary-600" />
                 <span>Competency Performance</span>
               </CardTitle>
             </CardHeader>
             <CardContent className="h-80">
               {loadingBreakdown ? (
                 <div className="flex items-center justify-center h-full">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
                 </div>
               ) : (
                 <ResponsiveContainer width="100%" height="100%">
@@ -335,7 +335,7 @@ const StudentDashboard: React.FC = () => {
                 <AlertCircle className="h-5 w-5 text-red-600" />
                 <span>Personalized Study Recommendations</span>
               </div>
-              <Badge variant="secondary" className="bg-blue-100 text-blue-800">
+              <Badge variant="secondary" className="bg-primary-100 text-primary-800">
                 AI Powered
               </Badge>
             </CardTitle>
@@ -343,7 +343,7 @@ const StudentDashboard: React.FC = () => {
           <CardContent>
             {loadingRecommendations ? (
               <div className="flex items-center justify-center py-12">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
               </div>
             ) : (
               <div className="space-y-6">

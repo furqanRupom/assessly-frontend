@@ -5,7 +5,7 @@ import AssessmentInstructions from './components/AssessmentInstructionts';
 import ActiveAssessment from './components/ActiveAssessment';
 import AssessmentCompletion from './components/AssessmentCompletion';
 import { useStartAssessmentMutation, useSubmitAssessmentMutation } from '@/redux/features/assessment/assessmentApi';
-import { useGetQuestionsByAssessmentQuery, useGetQuestionsQuery } from '@/redux/features/assessment/questionApi';
+import { useGetQuestionsByAssessmentQuery } from '@/redux/features/assessment/questionApi';
 import { ASSESSMENT_STEPS } from '@/constants/assessmentData';
 import type { AssessmentState, Question, StartAssessmentResponse, SubmitAssessmentData, SubmitAssessmentResponse } from '@/interfaces/assessment';
 import { useUser } from '@/hooks/useUser';
@@ -123,7 +123,6 @@ const Assessment: React.FC = () => {
                 testSessionId: assessmentId,
                 answers: answerArray
             }).unwrap() as SubmitAssessmentResponse;
-            console.log(result.data)
 
             setAssessmentResults(result.data);
             setAssessmentState('completed');
@@ -182,6 +181,7 @@ const Assessment: React.FC = () => {
                     assessmentData={ASSESSMENT_STEPS[selectedStep]}
                     selectedStep={selectedStep}
                     answers={answers}
+                    assessmentId={assessmentId}
                     timeRemaining={timeRemaining}
                     setAssessmentState={setAssessmentState}
                     setSelectedStep={setSelectedStep}

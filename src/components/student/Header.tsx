@@ -9,7 +9,6 @@ import {
     LogOut,
     Settings,
     ChevronDown,
-    GraduationCap,
     Menu
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -48,6 +47,7 @@ const Header: React.FC = () => {
     ];
 
     const isActive = (path: string) => location.pathname === path;
+  
 
     return (
         <nav className="bg-white/95 backdrop-blur-xl border-b border-gray-200/50 sticky top-0 z-50">

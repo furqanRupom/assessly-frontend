@@ -49,8 +49,15 @@ export const studentApi = baseApi.injectEndpoints({
                 url:"/assessment/student/results",
                 method:"GET"
            })
+        }),
+        generateAssessmentPdf: builder.mutation<Blob, { id: string }>({
+            query: ({ id }) => ({
+                url: `/student/generate-certificate/${id}`,
+                method: "POST",
+                responseHandler: (response) => response.blob(),
+            }),
         })
     })
 })
 
-export const { useGetCompetencyBreakdownQuery, useGetAssessmentStatsQuery, useGetScoreProgressQuery, useGetAssessmentHistoryQuery, useGetCompetencyPerformanceQuery, useGetStudyRecommendationsQuery, useGetDailyActivityQuery,useGetAssessmentResultsQuery } = studentApi
+export const { useGetCompetencyBreakdownQuery, useGetAssessmentStatsQuery, useGetScoreProgressQuery, useGetAssessmentHistoryQuery, useGetCompetencyPerformanceQuery, useGetStudyRecommendationsQuery, useGetDailyActivityQuery, useGetAssessmentResultsQuery, useGenerateAssessmentPdfMutation } = studentApi

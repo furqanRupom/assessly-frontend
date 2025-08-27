@@ -16,6 +16,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Search, Filter, ChevronLeft, ChevronRight, Clock, BarChart3, Calendar } from 'lucide-react';
+import { useGetUserProfileQuery } from '@/redux/features/user/userApi';
 
 interface AssessmentItem {
   _id: string;
@@ -24,6 +25,7 @@ interface AssessmentItem {
   score: number;
   timeSpent: number;
   totalQuestions: number;
+  correctAnswer: number
   createdAt: string;
 }
 
@@ -57,7 +59,7 @@ const formatTimeSpent = (seconds: number): string => {
 // Get badge color based on percentage
 const getPercentageColor = (percentage: number): string => {
   if (percentage >= 90) return 'bg-green-100 text-green-800 border-green-200';
-  if (percentage >= 70) return 'bg-blue-100 text-blue-800 border-blue-200';
+  if (percentage >= 70) return 'bg-primary-100 text-primary-800 border-primary-200';
   if (percentage >= 50) return 'bg-yellow-100 text-yellow-800 border-yellow-200';
   return 'bg-red-100 text-red-800 border-red-200';
 };
@@ -67,7 +69,7 @@ const getLevelColor = (level: string): string => {
   const levelColors: Record<string, string> = {
     A1: 'bg-purple-100 text-purple-800 border-purple-200',
     A2: 'bg-indigo-100 text-indigo-800 border-indigo-200',
-    B1: 'bg-blue-100 text-blue-800 border-blue-200',
+    B1: 'bg-primary-100 text-primary-800 border-primary-200',
     B2: 'bg-green-100 text-green-800 border-green-200',
     C1: 'bg-yellow-100 text-yellow-800 border-yellow-200',
     C2: 'bg-orange-100 text-orange-800 border-orange-200',
@@ -158,14 +160,14 @@ const MyAssessments: React.FC<IMyAssessmentsProps> = () => {
       {/* Statistics Cards */}
       {stats && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <Card className="bg-gradient-to-br from-blue-50 to-blue-100">
+          <Card className="bg-gradient-to-br from-primary-50 to-primary-100">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Total Assessments</CardTitle>
-              <BarChart3 className="h-4 w-4 text-blue-600" />
+              <BarChart3 className="h-4 w-4 text-primary-600" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-blue-800">{stats.totalAssessments}</div>
-              <p className="text-xs text-blue-600">All time assessments</p>
+              <div className="text-2xl font-bold text-primary-800">{stats.totalAssessments}</div>
+              <p className="text-xs text-primary-600">All time assessments</p>
             </CardContent>
           </Card>
 
@@ -311,18 +313,18 @@ const MyAssessments: React.FC<IMyAssessmentsProps> = () => {
                         <div className="flex items-center gap-2">
                           <div className="w-16 bg-gray-200 rounded-full h-2">
                             <div
-                              className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                              className="bg-primary-600 h-2 rounded-full transition-all duration-300"
                               style={{ width: `${item.percentage}%` }}
                             />
                           </div>
-                          <Badge className={getPercentageColor(item.percentage)}>
-                            {item.percentage.toFixed(1)}%
+                          <Badge className={getPercentageColor(item.score)}>
+                            {item.score.toFixed(1)}%
                           </Badge>
                         </div>
                       </TableCell>
                       <TableCell className="text-sm text-gray-600">
                         {/* Fix: Round the score to whole number */}
-                        {Math.round(item.score)}/{item.totalQuestions} correct
+                        {Math.round(item.correctAnswer)}/{item.totalQuestions} correct
                       </TableCell>
                       <TableCell>
                         <div className="flex items-center gap-1 text-sm text-gray-600">

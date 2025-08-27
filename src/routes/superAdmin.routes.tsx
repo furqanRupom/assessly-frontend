@@ -1,9 +1,9 @@
-import { BoxSelect, Home, SquarePercent, User2, UserCircle } from "lucide-react";
-import AdminDashboard from "../pages/dashboard/admin/AdminDashboard";
+import { BoxSelect, Home, Settings, SquarePercent, User2, UserCircle } from "lucide-react";
 import Admins from "../pages/dashboard/superAdmin/Admins";
 import StudentManagement from "../pages/dashboard/superAdmin/Students";
 import SupervisorManagement from "../pages/dashboard/superAdmin/Supervisors";
 import SuperAdminDashboard from "../pages/dashboard/superAdmin/SuperAdminDashboard";
+import ProfilePage from "@/pages/profile/Profile";
 /*
 /admin-home
 /add-supervisor
@@ -41,5 +41,11 @@ export const SuperAdminSidebarPaths = [
         icon: <SquarePercent size={18} />,
         element: <SupervisorManagement />
 
+    },
+    {
+        name: "Settings",
+        path:"settings",
+        icon:<Settings size={18}/>,
+        element:<ProfilePage />
     }
 ]

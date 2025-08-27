@@ -2,6 +2,7 @@
 import React from 'react';
 import { BookOpen, CheckCircle2, ArrowRight } from 'lucide-react';
 import { ASSESSMENT_STEPS } from '@/constants/assessmentData';
+import { motion } from 'framer-motion';
 
 interface AssessmentSelectionProps {
     selectedStep: number;
@@ -16,32 +17,49 @@ const AssessmentSelection: React.FC<AssessmentSelectionProps> = ({
 }) => {
     return (
         <div className="max-w-6xl mx-auto p-6">
-            <div className="text-center mb-12">
-         
+            <motion.div
+                className="text-center mb-12"
+                initial={{ opacity: 0, y: -30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, ease: 'easeOut' }}
+            >
                 <h1 className="text-4xl font-bold text-gray-900 mb-4">Choose Your Assessment Level</h1>
                 <p className="text-xl text-gray-600 max-w-3xl mx-auto">
                     Select the appropriate step based on your current digital skills level. Each step builds upon the previous one.
                 </p>
-            </div>
+            </motion.div>
 
             <div className="grid md:grid-cols-3 gap-8 mb-12">
-                {Object.entries(ASSESSMENT_STEPS).map(([step, info]) => {
+                {Object.entries(ASSESSMENT_STEPS).map(([step, info], index) => {
                     const stepNumber = parseInt(step);
                     return (
-                        <div
+                        <motion.div
                             key={step}
                             onClick={() => setSelectedStep(stepNumber)}
                             className={`cursor-pointer rounded-2xl p-8 transition-all duration-300 ${selectedStep === stepNumber
-                                    ? 'bg-primary-600 text-white shadow-xl scale-105'
-                                    : 'bg-white text-gray-900 shadow-lg hover:shadow-xl hover:scale-102'
+                                ? 'bg-primary-600 text-white shadow-xl scale-105'
+                                : 'bg-white text-gray-900 shadow-lg hover:shadow-xl hover:scale-102'
                                 }`}
+                            initial={{ opacity: 0, y: 40 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: index * 0.15, duration: 0.5, ease: 'easeOut' }}
+                            whileHover={{ scale: 1.03 }}
+                            whileTap={{ scale: 0.98 }}
                         >
                             <div className="flex items-center justify-between mb-4">
                                 <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-lg font-bold ${selectedStep === stepNumber ? 'bg-primary-500' : 'bg-primary-100 text-primary-600'
                                     }`}>
                                     {step}
                                 </div>
-                                {selectedStep === stepNumber && <CheckCircle2 className="w-6 h-6" />}
+                                {selectedStep === stepNumber && (
+                                    <motion.div
+                                        initial={{ scale: 0, rotate: -90 }}
+                                        animate={{ scale: 1, rotate: 0 }}
+                                        transition={{ duration: 0.3 }}
+                                    >
+                                        <CheckCircle2 className="w-6 h-6" />
+                                    </motion.div>
+                                )}
                             </div>
 
                             <h3 className="text-xl font-bold mb-2">{info.name}</h3>
@@ -64,20 +82,27 @@ const AssessmentSelection: React.FC<AssessmentSelectionProps> = ({
                                         }`}>Questions</div>
                                 </div>
                             </div>
-                        </div>
+                        </motion.div>
                     );
                 })}
             </div>
 
-            <div className="text-center">
-                <button
+            <motion.div
+                className="text-center"
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5, duration: 0.6 }}
+            >
+                <motion.button
                     onClick={() => setAssessmentState('instructions')}
                     className="bg-primary-600 text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-primary-700 transition-colors duration-200 flex items-center mx-auto"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
                 >
                     Continue to Instructions
                     <ArrowRight className="w-5 h-5 ml-2" />
-                </button>
-            </div>
+                </motion.button>
+            </motion.div>
         </div>
     );
 };
