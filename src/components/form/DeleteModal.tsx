@@ -6,7 +6,7 @@ import {
     DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { AlertCircle, Loader2, Trash2, X } from "lucide-react";
+import { AlertCircle, Loader2, Trash2, } from "lucide-react";
 
 interface DeleteModalProps {
     isOpen: boolean;

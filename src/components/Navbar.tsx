@@ -5,11 +5,8 @@ import {
     Menu,
     X,
     ChevronDown,
-    User,
     LayoutDashboard,
     LogOut,
-    Settings,
-    Bell,
     Home,
     Info,
     HelpCircle
@@ -26,7 +23,7 @@ const Navbar = () => {
     const dispatch = useDispatch();
 
     // Get user profile data
-    const { data, isLoading, error } = useGetUserProfileQuery({});
+    const { data, isLoading } = useGetUserProfileQuery({});
     const profile = data?.data;
 
     useEffect(() => {
@@ -54,15 +51,6 @@ const Navbar = () => {
     ];
 
     const isActiveLink = (path: string) => location.pathname === path;
-
-    // Animation variants
-    const fadeIn = {
-        hidden: { opacity: 0 },
-        visible: {
-            opacity: 1,
-            transition: { duration: 0.3 }
-        }
-    };
 
     const slideIn = {
         hidden: { x: '100%' },

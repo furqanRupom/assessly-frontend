@@ -6,7 +6,7 @@ import { Navigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { logout } from "../../redux/features/auth/authSlice";
 
-export const Topbar = ({ onMenuClick }: { onMenuClick: () => void }) => {
+export const Topbar = () => {
     const [isProfileOpen, setIsProfileOpen] = useState(false);
     const [isSearchFocused, setIsSearchFocused] = useState(false);
     const { data, isLoading } = useGetUserProfileQuery({});
@@ -51,13 +51,7 @@ export const Topbar = ({ onMenuClick }: { onMenuClick: () => void }) => {
             <div className="flex items-center justify-between px-4 py-3">
                 {/* Left: Menu + Search */}
                 <div className="flex items-center gap-3">
-                    <button
-                        className="p-2 rounded-lg text-primary-600 hover:bg-primary-100 transition-colors lg:hidden"
-                        onClick={onMenuClick}
-                    >
-                        <Menu size={22} />
-                    </button>
-
+                    
                     {/* Search */}
                     <div className="relative hidden sm:block">
                         <Search

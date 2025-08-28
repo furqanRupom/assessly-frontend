@@ -17,13 +17,7 @@ import {
   Tooltip,
   ResponsiveContainer,
   BarChart,
-  Bar,
-  PieChart,
-  Pie,
-  Cell,
-  RadialBarChart,
-  RadialBar,
-  Legend,
+  Bar
 } from "recharts";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
@@ -40,7 +34,6 @@ import {
   CheckCircle,
   AlertCircle
 } from "lucide-react";
-import { useUser } from "@/hooks/useUser";
 import { useGetUserProfileQuery } from "@/redux/features/user/userApi";
 
 

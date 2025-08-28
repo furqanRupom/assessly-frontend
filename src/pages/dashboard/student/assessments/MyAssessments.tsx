@@ -16,7 +16,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Search, Filter, ChevronLeft, ChevronRight, Clock, BarChart3, Calendar } from 'lucide-react';
-import { useGetUserProfileQuery } from '@/redux/features/user/userApi';
 
 interface AssessmentItem {
   _id: string;

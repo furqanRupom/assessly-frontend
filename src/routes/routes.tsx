@@ -15,10 +15,8 @@ import { routesGenerator } from "../utils/routesGenerator";
 import { StudentSidebarPaths } from "./student.routes";
 import { AdminSidebarPaths } from "./admin.routes";
 import { SuperAdminSidebarPaths } from "./superAdmin.routes";
-import Assessment from "@/pages/Assessment/Assessment";
 import StudentDashboardLayout from "@/layout/StudentLayout";
 import HowItWorks from "@/pages/HowItWorks/HowItWorks";
-import ProfilePage from "@/pages/profile/Profile";
 // import ChangePassword from "../pages/ChangePassword";
 
 const router = createBrowserRouter([

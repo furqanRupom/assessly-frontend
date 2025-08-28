@@ -1,6 +1,6 @@
 // components/AssessmentSelection.tsx
 import React from 'react';
-import { BookOpen, CheckCircle2, ArrowRight } from 'lucide-react';
+import { CheckCircle2, ArrowRight } from 'lucide-react';
 import { ASSESSMENT_STEPS } from '@/constants/assessmentData';
 import { motion } from 'framer-motion';
 

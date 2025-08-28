@@ -1,4 +1,4 @@
-import { BoxSelect, Home, Settings, SquarePercent, User2, UserCircle } from "lucide-react";
+import { BoxSelect, Home, Settings, SquarePercent, User2 } from "lucide-react";
 import Admins from "../pages/dashboard/superAdmin/Admins";
 import StudentManagement from "../pages/dashboard/superAdmin/Students";
 import SupervisorManagement from "../pages/dashboard/superAdmin/Supervisors";

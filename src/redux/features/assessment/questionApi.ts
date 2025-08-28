@@ -1,5 +1,5 @@
 // redux/features/assessment/questionApi.ts
-import type { IAssessmentQuestion, Question } from '@/interfaces/assessment';
+import type {  Question } from '@/interfaces/assessment';
 import { baseApi } from '@/redux/api/baseApi';
 import type { IQueryParams } from '@/interfaces/admin.interface';
 import type { IResponse } from '@/interfaces/interface';

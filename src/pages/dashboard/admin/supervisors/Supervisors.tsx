@@ -3,7 +3,7 @@ import * as React from 'react';
 interface ISupervisorsProps {
 }
 
-const Supervisors: React.FunctionComponent<ISupervisorsProps> = (props) => {
+const Supervisors: React.FunctionComponent<ISupervisorsProps> = () => {
   return <>we will add all supervisors</>;
 };
 

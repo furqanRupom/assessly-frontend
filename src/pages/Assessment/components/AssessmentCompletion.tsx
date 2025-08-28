@@ -1,5 +1,5 @@
 import React from 'react';
-import { CheckCircle2, Award, ArrowRight, XCircle, AlertCircle, Clock, Verified, X } from 'lucide-react';
+import { CheckCircle2, Award, ArrowRight, XCircle, AlertCircle,  Verified, X } from 'lucide-react';
 import type { AssessmentStep, Question } from '@/interfaces/assessment';
 import { calculateScore, formatTime } from '@/utils/assessment';
 

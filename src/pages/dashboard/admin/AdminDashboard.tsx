@@ -1,9 +1,7 @@
 import * as React from 'react';
 
-interface IAdminDashboardProps {
-}
 
-const AdminDashboard: React.FunctionComponent<IAdminDashboardProps> = (props) => {
+const AdminDashboard: React.FunctionComponent = () => {
   return <>welcome to admin home</>;
 };
 

@@ -35,7 +35,7 @@ interface PasswordFormData {
     confirmPassword: string;
 }
 
-const ProfilePage: React.FunctionComponent<IProfilePageProps> = (props) => {
+const ProfilePage: React.FunctionComponent<IProfilePageProps> = () => {
     const { data: profileData, refetch } = useGetUserProfileQuery({});
     const [updateProfile, { isLoading: isUpdating }] = useUpdateUserProfileMutation();
     const [changePassword, { isLoading: isChangingPassword }] = useChangePasswordMutation();

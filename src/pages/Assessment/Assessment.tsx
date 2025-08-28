@@ -27,7 +27,7 @@ const Assessment: React.FC = () => {
 
     // RTK Query hooks
     const [startAssessment, { isLoading: isStarting }] = useStartAssessmentMutation();
-    const [submitAssessment, { isLoading: isSubmitting }] = useSubmitAssessmentMutation();
+    const [submitAssessment] = useSubmitAssessmentMutation();
 
     // Get questions data when we have an assessment ID
     // const { data: questionsData, isLoading: isLoadingQuestions } = useGetQuestionsQuery(

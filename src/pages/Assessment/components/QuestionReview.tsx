@@ -1,6 +1,6 @@
 // components/QuestionReview.tsx
 import React from 'react';
-import { Timer, ArrowLeft, Flag, AlertTriangle, CheckCircle2, VerifiedIcon, X, AlertCircle, Verified } from 'lucide-react';
+import { Timer, ArrowLeft, Flag, AlertTriangle, CheckCircle2, VerifiedIcon, X} from 'lucide-react';
 import type { Question } from '@/interfaces/assessment';
 
 interface QuestionReviewProps {

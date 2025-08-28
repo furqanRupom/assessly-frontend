@@ -1,6 +1,6 @@
 // components/ActiveAssessment.tsx
 import React from 'react';
-import { Timer, Flag, CheckCircle2, HelpCircle, ArrowLeft, ArrowRight, AlertTriangle, X, Verified } from 'lucide-react';
+import { Timer, Flag, CheckCircle2, ArrowLeft, ArrowRight, AlertTriangle } from 'lucide-react';
 import QuestionNavigation from './QuestionNavigation';
 import QuestionReview from './QuestionReview';
 import type { AssessmentStep, Question } from '@/interfaces/assessment';

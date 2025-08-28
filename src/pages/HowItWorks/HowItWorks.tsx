@@ -15,7 +15,6 @@ import {
     Target,
     Zap,
     Mail,
-    Phone,
     MessageCircle
 } from 'lucide-react';
 import { Link } from 'react-router-dom';

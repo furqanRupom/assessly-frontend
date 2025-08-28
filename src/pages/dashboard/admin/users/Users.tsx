@@ -3,7 +3,7 @@ import * as React from 'react';
 interface IUsersProps {
 }
 
-const Users: React.FunctionComponent<IUsersProps> = (props) => {
+const Users: React.FunctionComponent<IUsersProps> = () => {
   return <>We will add all users here</>;
 };
 
