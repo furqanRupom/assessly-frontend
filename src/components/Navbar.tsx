@@ -206,7 +206,7 @@ const Navbar = () => {
                                                     initial="hidden"
                                                     animate="visible"
                                                     exit="hidden"
-                                                    className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-lg border border-gray-200 py-2 z-50"
+                                                    className="absolute right-0 mt-2  bg-white rounded-xl shadow-lg border border-gray-200 py-2 z-50"
                                                 >
                                                     <div className="px-4 py-2 border-b border-gray-100">
                                                         <p className="font-semibold text-gray-900">{profile.name}</p>
