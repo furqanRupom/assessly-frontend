@@ -1,5 +1,4 @@
 import { History, Home, User, Workflow } from "lucide-react";
-import AdminDashboard from "../pages/dashboard/admin/AdminDashboard";
 import StudentHome from "../pages/dashboard/student/StudentHome";
 import MyAssessments from "../pages/dashboard/student/assessments/MyAssessments";
 import Assessment from "@/pages/Assessment/Assessment";

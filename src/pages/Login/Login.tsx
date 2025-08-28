@@ -1,14 +1,14 @@
 // src/pages/Login.tsx
 import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
-import { Mail, Lock } from 'lucide-react';
+import {  Lock } from 'lucide-react';
 import ASForm from '../../components/form/ASForm';
 import ASInput from '../../components/form/ASInput';
 import { useDispatch } from 'react-redux';
 import {toast} from 'sonner'
 import { useLoginMutation } from '../../redux/features/auth/authApi';
 import { verifyToken, type DecodedToken } from '../../utils/verifyToken';
-import { setUser, type IUser } from '../../redux/features/auth/authSlice';
+import { setUser} from '../../redux/features/auth/authSlice';
 import type { FieldValues } from 'react-hook-form';
 
 const Login =  () => {
