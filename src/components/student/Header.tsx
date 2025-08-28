@@ -41,7 +41,7 @@ const Header: React.FC = () => {
 
     const navItems = [
         { id: 'dashboard', label: 'Dashboard', icon: Home, path: '/student/dashboard' },
-        { id: 'assessments', label: 'Assessments', icon: ClipboardCheck, path: 'student/assessments' },
+        { id: 'assessments', label: 'Assessments', icon: ClipboardCheck, path: '/student/assessments' },
         { id: 'history', label: 'History', icon: History, path: '/student/history' },
         { id: 'profile', label: 'Profile', icon: User, path: '/student/profile' },
     ];
