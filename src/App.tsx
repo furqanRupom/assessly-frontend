@@ -3,6 +3,8 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { BookOpen, BarChart2, Award, CheckCircle, ArrowRight, Users, Star, Play } from 'lucide-react';
 import PrimaryButton from './components/button/PrimaryButton';
+import { useUser } from './hooks/useUser';
+import { roleLabels } from './constants/rolesLabel';
 
 // Animation variants
 const container = {
@@ -28,6 +30,7 @@ const item = {
 };
 
 const Home = () => {
+  const user = useUser();
   const stats = [
     { value: '10,000+', label: 'Certified Users' },
     { value: '95%', label: 'Success Rate' },
@@ -102,10 +105,31 @@ const Home = () => {
               variants={item}
               className="flex flex-col sm:flex-row justify-center gap-4 mb-16"
             >
-              <PrimaryButton link='/register' className='inline-flex items-center'>
-                Start Assessment
-                <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+              <PrimaryButton
+                link={
+                  user
+                    ? user.role === "student"
+                      ? "student/assessments"
+                      : `/${user.role}/dashboard`
+                    : "/register"
+                }
+                className="inline-flex items-center"
+              >
+                {user ? (
+                  user.role === "student" ? (
+                    <>
+                      Start Assessment
+                      <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                    </>
+                  ) : (
+                    <span>{roleLabels[user.role]} Dashboard</span>
+                  )
+                ) : (
+                  "Start your journey"
+                )}
               </PrimaryButton>
+
+
               <button className="inline-flex items-center px-6 py-3 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-all duration-200 hover:border-gray-400">
                 <Play className="w-4 h-4 mr-2" />
                 Watch Demo

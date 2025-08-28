@@ -3,8 +3,12 @@ import { motion } from 'framer-motion';
 import { BookOpen, ShieldCheck, BarChart2, Clock, Award, Users, Globe, ChevronRight, Target, Zap, Heart, CheckCircle2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import { useUser } from '@/hooks/useUser';
+import { roleLabels } from '@/constants/rolesLabel';
 
 const About = () => {
+    const user = useUser()
+
     // Animation variants
     const container = {
         hidden: { opacity: 0 },
@@ -119,9 +123,27 @@ const About = () => {
 
                         <motion.div variants={item}>
                             <Button asChild size="lg" className="bg-primary-600 hover:bg-primary-700">
-                                <Link to="/assessments">
-                                    Explore Our Assessments
-                                    <ChevronRight className="w-4 h-4 ml-1" />
+                                <Link
+                                    to={
+                                        user
+                                            ? user.role === "student"
+                                                ? "/student/assessments"
+                                                : `/${user.role}/dashboard`
+                                            : "/register"
+                                    }
+                                >
+                                    {user ? (
+                                        user.role === "student" ? (
+                                            <>
+                                                Start Your Assessment
+                                                <ChevronRight className="w-4 h-4 ml-2" />
+                                            </>
+                                        ) : (
+                                            <span>{roleLabels[user.role]} Dashboard</span>
+                                        )
+                                    ) : (
+                                        "Start Your Journey"
+                                    )}
                                 </Link>
                             </Button>
                         </motion.div>
@@ -341,9 +363,27 @@ const About = () => {
                         </p>
                         <div className="flex flex-col sm:flex-row justify-center gap-4">
                             <Button asChild size="lg" className="bg-white text-primary-600 hover:bg-primary-50">
-                                <Link to="/register">
-                                    Start Your Assessment
-                                    <ChevronRight className="w-4 h-4 ml-2" />
+                                <Link
+                                    to={
+                                        user
+                                            ? user.role === "student"
+                                                ? "/student/assessments"
+                                                : `/${user.role}/dashboard`
+                                            : "/register"
+                                    }
+                                >
+                                    {user ? (
+                                        user.role === "student" ? (
+                                            <>
+                                                Start Your Assessment
+                                                <ChevronRight className="w-4 h-4 ml-2" />
+                                            </>
+                                        ) : (
+                                            <span>{roleLabels[user.role]} Dashboard</span>
+                                        )
+                                    ) : (
+                                        "Start Your Journey"
+                                    )}
                                 </Link>
                             </Button>
                             <Button variant="default" asChild size="lg" className="border-primary-300 text-primary-100 hover:bg-primary-500 bg-primary-700">

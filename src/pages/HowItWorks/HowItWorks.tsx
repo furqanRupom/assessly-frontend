@@ -19,8 +19,11 @@ import {
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import { roleLabels } from '@/constants/rolesLabel';
+import { useUser } from '@/hooks/useUser';
 
 const HowItWorks = () => {
+    const user = useUser()
     // Animation variants
     const container = {
         hidden: { opacity: 0 },
@@ -171,9 +174,27 @@ const HowItWorks = () => {
 
                         <motion.div variants={item} className="flex flex-col sm:flex-row justify-center gap-4">
                             <Button asChild size="lg" className="bg-primary-600 hover:bg-primary-700">
-                                <Link to="/register">
-                                    Start Your Assessment
-                                    <ChevronRight className="w-4 h-4 ml-1" />
+                                <Link
+                                    to={
+                                        user
+                                            ? user.role === "student"
+                                                ? "/student/assessments"
+                                                : `/${user.role}/dashboard`
+                                            : "/register"
+                                    }
+                                >
+                                    {user ? (
+                                        user.role === "student" ? (
+                                            <>
+                                                Start Your Assessment
+                                                <ChevronRight className="w-4 h-4 ml-2" />
+                                            </>
+                                        ) : (
+                                            <span>{roleLabels[user.role]} Dashboard</span>
+                                        )
+                                    ) : (
+                                        "Start Your Journey"
+                                    )}
                                 </Link>
                             </Button>
                             <Button variant="outline" asChild size="lg">
@@ -186,8 +207,8 @@ const HowItWorks = () => {
                     </motion.div>
                 </div>
 
-           
-            
+
+
             </section>
 
             {/* Process Steps */}
